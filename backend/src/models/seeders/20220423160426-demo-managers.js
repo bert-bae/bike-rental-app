@@ -6,7 +6,7 @@ const { v4 } = require("uuid");
 module.exports = {
   async up(queryInterface, Sequelize) {
     return queryInterface.bulkInsert(
-      "Managers",
+      "Users",
       [
         {
           id: v4(),
@@ -14,6 +14,7 @@ module.exports = {
           username: "superadmin2022",
           password:
             "$2y$10$/Ak2oFXaKLo1xaZ4J4AjGu/RV7eOb.AljcQWTmdxaUEVdAkzK0kny",
+          role: "Admin",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -23,6 +24,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    return queryInterface.bulkDelete("Managers", null, {});
+    return queryInterface.bulkDelete("Users", null, {});
   },
 };

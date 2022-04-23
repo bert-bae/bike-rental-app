@@ -14,7 +14,7 @@ _Setting up dependencies_:
 _Setup the database_:
 
 1. In `backend` folder, run `sequelize db:migrate` to generate the tables and models.
-2. [For Development] Seed the data with one manager user and fake bikes by running `sequelize db:seed:all`
+2. [For Development] Seed the data with one admin user and fake bikes by running `sequelize db:seed:all`
 
 _Run the server_:
 
