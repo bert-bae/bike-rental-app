@@ -5,7 +5,13 @@ import Router from "./Router";
 import store from "./redux";
 import "./App.css";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5000,
+    },
+  },
+});
 function App() {
   return (
     <QueryClientProvider client={queryClient}>

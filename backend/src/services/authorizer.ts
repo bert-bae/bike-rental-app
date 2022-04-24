@@ -29,7 +29,7 @@ export class AuthService extends Authorizer {
     const jwtSecretKey = <string>process.env.JWT_SECRET_KEY;
     const token = jwt.sign(
       {
-        time: Date(),
+        // time: Date(),
         userId: user.id,
       },
       jwtSecretKey

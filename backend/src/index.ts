@@ -1,8 +1,8 @@
 import bodyParser from "body-parser";
 import express from "express";
 import cors from "cors";
-import { authMiddlewares, userRoutes } from "./controllers";
-import { UserRoleEnum } from "./models/model.type";
+import { userRoutes, bikeRoutes } from "./controllers";
+
 const db = require("./models");
 const app = express();
 
@@ -16,11 +16,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/users", userRoutes);
-
-app.use(authMiddlewares(UserRoleEnum.Admin));
-app.get("/auth", (req, res) => {
-  res.status(200).json({ auth: "Authorized" });
-});
+app.use("/bikes", bikeRoutes);
 
 app.listen(<string>process.env.PORT, () => {
   console.log(`Connected to server on port ${process.env.PORT}`);

@@ -6,19 +6,39 @@ const authorize =
     const tokenHeaderKey = <string>process.env.TOKEN_HEADER_KEY;
     const token = req.header(tokenHeaderKey);
     const tokenKey = token.split(" ")[1];
+    console.log("!!!!!!token");
+    console.log(token);
     if (!tokenKey) {
-      throw new Error("Unable to authorize. The token is invalid.");
+      res.status(403).send({
+        error: {
+          message: "Unable to authorize. The token is invalid.",
+        },
+      });
+      return;
     }
 
     const user = await authService.authorize(tokenKey);
+    console.log("!!!");
+    console.log(user);
+    console.log(role);
     if (!user) {
-      throw new Error("Unable to authorize. The token is invalid.");
+      res.status(403).send({
+        error: {
+          message: "Unable to authorize. The token is invalid.",
+        },
+      });
+      return;
     }
 
-    // req.user = user;
     if (user.role !== role) {
-      throw new Error("Unable to authorize. Roles are not aligned.");
+      res.status(403).send({
+        error: {
+          message: "User does not have enough permissions",
+        },
+      });
+      return;
     }
+
     req.user = {
       id: user.id,
       username: user.username,

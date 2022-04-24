@@ -17,8 +17,8 @@ export const useLoginMutation = () => {
       console.log("handleErrror");
     },
     onSuccess: ({ data }) => {
-      dispatch(save(data));
       data.role === UserRoleEnum.Admin ? navigate("/admin") : navigate("/");
+      dispatch(save(data));
     },
   });
 };

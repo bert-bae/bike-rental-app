@@ -45,8 +45,8 @@ export class UserService extends BaseService<TUserModel> {
   }
 
   public async findAllBy(
-    where: Record<string, any>,
-    includes: Includeable
+    where?: Record<string, any>,
+    includes?: Includeable
   ): Promise<Array<TUserModel>> {
     const users = await this.model.findAll({
       where,
@@ -55,7 +55,10 @@ export class UserService extends BaseService<TUserModel> {
     return users;
   }
 
-  public async updateOne(id: string, update: TUserModel): Promise<void> {
+  public async updateOne(
+    id: string,
+    update: Partial<TUserModel>
+  ): Promise<void> {
     if (update.password) {
       update.password = await bcrypt.hash(
         update.password,
