@@ -15,7 +15,12 @@ export class AuthService extends Authorizer {
   public async login(
     username: string,
     password: string
-  ): Promise<{ jwt: string; role: UserRoleEnum }> {
+  ): Promise<{
+    jwt: string;
+    role: UserRoleEnum;
+    userId: string;
+    username: string;
+  }> {
     const user = await this.model.findOne({ where: { username } });
     if (!user) {
       throw new Error(`User with username ${username} does not exist`);
@@ -35,7 +40,12 @@ export class AuthService extends Authorizer {
       jwtSecretKey
     );
 
-    return { jwt: `Bearer ${token}`, role: user.role };
+    return {
+      jwt: `Bearer ${token}`,
+      role: user.role,
+      userId: user.id,
+      username: user.username,
+    };
   }
 
   public async authorize(token: string): Promise<TUserModel | null> {

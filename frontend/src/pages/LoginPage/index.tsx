@@ -1,4 +1,4 @@
-import React from "react";
+import { useNavigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,8 +10,10 @@ import Container from "@mui/material/Container";
 import Page from "../../components/Page";
 import Copyright from "../../components/Copyright";
 import useLoginPage from "./useLoginPage";
+import React from "react";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const { onSubmit } = useLoginPage();
 
   return (
@@ -60,6 +62,17 @@ const LoginPage = () => {
               sx={{ mt: 3, mb: 2 }}
             >
               Sign In
+            </Button>
+            <Button
+              type="button"
+              fullWidth
+              variant="outlined"
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                e.preventDefault();
+                navigate("/register");
+              }}
+            >
+              Don't have an account? Register.
             </Button>
           </Box>
         </Box>

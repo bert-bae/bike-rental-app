@@ -13,7 +13,7 @@ module.exports = {
           name: "Super Admin",
           username: "superadmin2022",
           password:
-            "$2y$10$/Ak2oFXaKLo1xaZ4J4AjGu/RV7eOb.AljcQWTmdxaUEVdAkzK0kny",
+            "$2b$10$.DQWFymkQWTo9bgFkW9aQ.ww6yqf2ykWAW1g9Kr4HliyZc7YrOEm.",
           role: "Admin",
           createdAt: new Date(),
           updatedAt: new Date(),

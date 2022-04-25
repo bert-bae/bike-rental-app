@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, CssBaseline } from "@mui/material";
+import { Box, Container, CssBaseline } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { styled } from "@mui/system";
 
@@ -9,6 +9,7 @@ const theme = createTheme();
 
 const MainContainer = styled(Container)({
   height: "fit-content",
+  minHeight: "100%",
   width: "100%",
   paddingTop: "50px",
   paddingBottom: "50px",
@@ -18,10 +19,12 @@ const MainContainer = styled(Container)({
 const PageWrapper: PageWrapperProps = (props) => {
   return (
     <ThemeProvider theme={theme}>
-      <MainContainer>
-        <CssBaseline />
-        {props.children}{" "}
-      </MainContainer>
+      <Box style={{ backgroundColor: "#fffafa", height: "calc(100% - 64px)" }}>
+        <MainContainer>
+          <CssBaseline />
+          {props.children}{" "}
+        </MainContainer>
+      </Box>
     </ThemeProvider>
   );
 };

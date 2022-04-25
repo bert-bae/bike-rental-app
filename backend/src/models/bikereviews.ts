@@ -6,8 +6,8 @@ class BikeReviews extends Model<
   Optional<TBikeReviewModel, "id">
 > {
   public id!: string;
-  public bike_id!: string;
-  public user_id!: string;
+  public bikeId!: string;
+  public userId!: string;
   public rating!: string;
 
   // timestamps!
@@ -23,12 +23,12 @@ const init = (sequelizeConnection: Sequelize) => {
         autoIncrement: false,
         primaryKey: true,
       },
-      bike_id: {
+      bikeId: {
         type: DataTypes.STRING,
         references: "Bikes",
         key: "id",
       },
-      user_id: {
+      userId: {
         type: DataTypes.STRING,
         references: "Users",
         key: "id",

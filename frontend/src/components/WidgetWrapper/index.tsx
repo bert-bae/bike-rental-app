@@ -6,9 +6,9 @@ type WidgetWrapperProps = { children: any };
 
 const StyledBox = styled(Box)({
   borderRadius: "5px",
-  backgroundColor: "#f2f5f2",
   boxShadow: "0 0 4px rgba(0, 0, 0, 0.4)",
   margin: "20px 0",
+  backgroundColor: "#fff",
   padding: "20px",
 });
 

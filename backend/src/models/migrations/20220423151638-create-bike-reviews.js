@@ -8,19 +8,21 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.STRING,
       },
-      bike_id: {
+      bikeId: {
         type: Sequelize.STRING,
         references: {
           model: "Bikes",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
-      user_id: {
+      userId: {
         type: Sequelize.STRING,
         references: {
           model: "Users",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
       rating: {
         type: Sequelize.INTEGER,

@@ -44,18 +44,18 @@ export class UserService extends BaseService<TUserModel> {
     return user;
   }
 
-  public async findAllBy(
-    where?: Record<string, any>,
-    includes?: Includeable
-  ): Promise<Array<TUserModel>> {
+  public async findAllBy(input?: {
+    where?: Record<string, any>;
+    includes?: Includeable;
+  }): Promise<Array<TUserModel>> {
     const users = await this.model.findAll({
-      where,
-      include: includes,
+      where: input?.where,
+      include: input?.includes,
     });
     return users;
   }
 
-  public async updateOne(
+  public async updateById(
     id: string,
     update: Partial<TUserModel>
   ): Promise<void> {

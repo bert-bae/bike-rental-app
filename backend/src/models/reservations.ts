@@ -2,10 +2,11 @@ import { DataTypes, Model, Sequelize } from "sequelize";
 import { TReservationModel, ReservationStatusEnum } from "./model.type";
 
 class Reservations extends Model<TReservationModel, TReservationModel> {
-  public user_id!: string;
-  public bike_id!: string;
-  public start_time!: string;
-  public end_time!: string;
+  public id!: string;
+  public userId!: string;
+  public bikeId!: string;
+  public startTime!: string;
+  public endTime!: string;
   public status!: ReservationStatusEnum;
 
   // timestamps!
@@ -16,18 +17,23 @@ class Reservations extends Model<TReservationModel, TReservationModel> {
 const init = (sequelizeConnection: Sequelize) => {
   Reservations.init(
     {
-      user_id: {
+      id: {
+        type: DataTypes.STRING,
+        autoIncrement: false,
+        primaryKey: true,
+      },
+      userId: {
         type: DataTypes.STRING,
         references: "Users",
         key: "id",
       },
-      bike_id: {
+      bikeId: {
         type: DataTypes.STRING,
         references: "Bikes",
         key: "id",
       },
-      start_time: DataTypes.STRING,
-      end_time: DataTypes.STRING,
+      startTime: DataTypes.STRING,
+      endTime: DataTypes.STRING,
       status: DataTypes.STRING,
     },
     {

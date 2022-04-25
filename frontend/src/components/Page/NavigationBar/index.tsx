@@ -11,7 +11,7 @@ import styled from "@emotion/styled";
 
 type NavigationBarProps = {
   loggedIn: boolean;
-  onMenuClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onMenuClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onLogin: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onLogout: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };

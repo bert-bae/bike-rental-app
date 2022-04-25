@@ -12,11 +12,17 @@ import { FormHelperText } from "@mui/material";
 
 type UserFormProps = {
   user?: TUserModel | void;
+  isAdmin: boolean;
   onSubmit: (user: TUserModel) => void;
-  onCancel: () => void;
+  onCancel?: () => void;
 };
 
-const UserForm: React.FC<UserFormProps> = ({ user, onSubmit, onCancel }) => {
+const UserForm: React.FC<UserFormProps> = ({
+  user,
+  isAdmin,
+  onSubmit,
+  onCancel,
+}) => {
   const [formErrors, setFormErrors] = React.useState<Record<string, any>>({});
 
   const clearFormErrors = () => setFormErrors({});
@@ -59,7 +65,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onSubmit, onCancel }) => {
     clearFormErrors();
     onSubmit(data as TUserModel);
   };
-  console.log(user);
+
   return (
     <Box
       style={{ padding: "20px", width: "500px" }}
@@ -94,21 +100,26 @@ const UserForm: React.FC<UserFormProps> = ({ user, onSubmit, onCancel }) => {
         autoFocus
         defaultValue={user?.name || ""}
       />
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Role</InputLabel>
-        <Select defaultValue={user?.role || ""} name="role" label="Role">
-          <MenuItem value={UserRoleEnum.Admin}>{UserRoleEnum.Admin}</MenuItem>
-          <MenuItem value={UserRoleEnum.Member}>{UserRoleEnum.Member}</MenuItem>
-        </Select>
-      </FormControl>
+      {isAdmin && (
+        <FormControl fullWidth margin="normal">
+          <InputLabel>Role</InputLabel>
+          <Select defaultValue={user?.role || ""} name="role" label="Role">
+            <MenuItem value={UserRoleEnum.Admin}>{UserRoleEnum.Admin}</MenuItem>
+            <MenuItem value={UserRoleEnum.Member}>
+              {UserRoleEnum.Member}
+            </MenuItem>
+          </Select>
+        </FormControl>
+      )}
       <FormControl fullWidth>
         <TextField
           margin="normal"
           fullWidth
           name="password"
           label="Temporary Password"
-          type="text"
+          type="password"
           error={!!formErrors.password}
+          required={!user}
         />
         {formErrors.password && (
           <FormHelperText style={{ color: "red" }}>
@@ -122,8 +133,9 @@ const UserForm: React.FC<UserFormProps> = ({ user, onSubmit, onCancel }) => {
           fullWidth
           name="confirmPassword"
           label="Confirm Temporary Password"
-          type="text"
+          type="password"
           error={!!formErrors.confirmPassword}
+          required={!user}
         />
         {formErrors.confirmPassword && (
           <FormHelperText style={{ color: "red" }}>

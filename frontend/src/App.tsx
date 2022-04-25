@@ -10,6 +10,9 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 5000,
     },
+    mutations: {
+      retry: false,
+    },
   },
 });
 function App() {

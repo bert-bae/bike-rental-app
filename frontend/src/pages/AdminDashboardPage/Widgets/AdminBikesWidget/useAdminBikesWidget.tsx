@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import {
   useCreateBikeMutation,
   useDeleteBikeMutation,
@@ -6,6 +8,20 @@ import {
   useGetBikesQuery,
 } from "../../../../services/hooks/bikes";
 import { TBikeModel } from "../../../../types/entities.type";
+
+const columns = [
+  { key: "model", label: "Model" },
+  { key: "color", label: "Color" },
+  { key: "location", label: "Location" },
+  { key: "rating", label: "Rating" },
+  {
+    key: "available",
+    label: "Available",
+    render: (bike: TBikeModel) => {
+      return "Yes";
+    },
+  },
+];
 
 const useAdminBikesWidget = () => {
   const [bikeToEdit, setBikeToEdit] = React.useState<TBikeModel | void>();
@@ -52,6 +68,35 @@ const useAdminBikesWidget = () => {
     setBikeToEdit(undefined);
   };
 
+  const actionColumn = {
+    key: "actions",
+    label: "Actions",
+    render: (value: any, row: TBikeModel) => {
+      return (
+        <Box>
+          <Button
+            key={`edit:${row.id}`}
+            type="button"
+            variant="outlined"
+            style={{ margin: "5px" }}
+            onClick={() => handleShowEditBike(row)}
+          >
+            Edit
+          </Button>
+          <Button
+            key={`delete:${row.id}`}
+            type="button"
+            variant="outlined"
+            style={{ margin: "5px" }}
+            onClick={() => handleBikeDelete(row)}
+          >
+            Delete
+          </Button>
+        </Box>
+      );
+    },
+  };
+
   useEffect(() => {
     if (createSuccess || editSuccess || deleteSuccess) {
       resetForm();
@@ -62,10 +107,9 @@ const useAdminBikesWidget = () => {
     bikeToEdit,
     bikes: bikes || [],
     formVisible,
+    columns: [...columns, actionColumn],
     toggleForm,
-    onShowBikeEditForm: handleShowEditBike,
     onBikeFormSubmit: handleBikeFormSubmit,
-    onDeleteBike: handleBikeDelete,
     onCancelBikeForm: resetForm,
   };
 };

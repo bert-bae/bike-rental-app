@@ -28,18 +28,18 @@ export class BikesService extends BaseService<TBikeModel> {
     return bike;
   }
 
-  public async findAllBy(
-    where?: Record<string, any>,
-    includes?: Includeable
-  ): Promise<Array<TBikeModel>> {
+  public async findAllBy(input?: {
+    where?: Record<string, any>;
+    includes?: Includeable;
+  }): Promise<Array<TBikeModel>> {
     const bikes = await this.model.findAll({
-      where,
-      include: includes,
+      where: input?.where,
+      include: input?.includes,
     });
     return bikes;
   }
 
-  public async updateOne(id: string, update: TBikeModel): Promise<void> {
+  public async updateById(id: string, update: TBikeModel): Promise<void> {
     await this.model.update(update, { where: { id } });
   }
 

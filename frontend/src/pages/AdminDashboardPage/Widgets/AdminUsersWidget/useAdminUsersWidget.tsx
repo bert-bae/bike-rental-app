@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import { Box } from "@mui/material";
+import Button from "@mui/material/Button";
 import {
   useCreateUserMutation,
   useDeleteUserMutation,
@@ -6,6 +8,12 @@ import {
   useGetUsersQuery,
 } from "../../../../services/hooks/users";
 import { TUserModel } from "../../../../types/entities.type";
+
+const columns = [
+  { key: "name", label: "Name" },
+  { key: "username", label: "Username" },
+  { key: "role", label: "Role" },
+];
 
 const useAdminUsersWidget = () => {
   const [userToEdit, setUserToEdit] = React.useState<TUserModel | void>();
@@ -43,6 +51,35 @@ const useAdminUsersWidget = () => {
     setUserToEdit(undefined);
   };
 
+  const actionColumn = {
+    key: "actions",
+    label: "Actions",
+    render: (value: any, row: TUserModel) => {
+      return (
+        <Box>
+          <Button
+            key={`edit:${row.id}`}
+            type="button"
+            variant="outlined"
+            style={{ margin: "5px" }}
+            onClick={() => handleShowEditForm(row)}
+          >
+            Edit
+          </Button>
+          <Button
+            key={`delete:${row.id}`}
+            type="button"
+            variant="outlined"
+            style={{ margin: "5px" }}
+            onClick={() => handleUserDelete(row)}
+          >
+            Delete
+          </Button>
+        </Box>
+      );
+    },
+  };
+
   useEffect(() => {
     if (createSuccess || editSuccess || deleteSuccess) {
       resetForm();
@@ -53,10 +90,9 @@ const useAdminUsersWidget = () => {
     userToEdit,
     users: users || [],
     formVisible,
+    columns: [...columns, actionColumn],
     toggleForm,
-    onShowUserForm: handleShowEditForm,
     onUserFormSubmmit: handleUserFormSubmit,
-    onDeleteUser: handleUserDelete,
     onCancelUserForm: resetForm,
   };
 };

@@ -4,17 +4,16 @@ import DrawerForm from "../../../../components/DrawerForm";
 import DataTable from "../../../../components/DataTable";
 import UserForm from "../../../../components/EntityForms/UserForm";
 import WidgetWrapper from "../../../../components/WidgetWrapper";
-import userAdminUsersWidget from "./userAdminUsersWidget";
+import userAdminUsersWidget from "./useAdminUsersWidget";
 
 const AdminBikesWidget: React.FC<{}> = ({}) => {
   const {
     userToEdit,
     users,
     formVisible,
+    columns,
     toggleForm,
-    onShowUserForm,
     onUserFormSubmmit,
-    onDeleteUser,
     onCancelUserForm,
   } = userAdminUsersWidget();
 
@@ -31,23 +30,15 @@ const AdminBikesWidget: React.FC<{}> = ({}) => {
         </Typography>
         <Button onClick={() => toggleForm(true)}>Create User</Button>
       </Box>
-      <DrawerForm visible={formVisible}>
+      <DrawerForm visible={formVisible} onClose={onCancelUserForm}>
         <UserForm
+          isAdmin
           user={userToEdit}
           onSubmit={onUserFormSubmmit}
           onCancel={onCancelUserForm}
         />
       </DrawerForm>
-      <DataTable
-        title="Users"
-        data={users}
-        dataKeys={["name", "username", "role"]}
-        headers={["Name", "Username", "Role"]}
-        actions={[
-          { text: "Edit", action: onShowUserForm },
-          { text: "Delete", action: onDeleteUser },
-        ]}
-      />
+      <DataTable title="Users" rows={users} columns={columns} />
     </WidgetWrapper>
   );
 };

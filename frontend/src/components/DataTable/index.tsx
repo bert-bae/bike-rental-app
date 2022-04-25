@@ -12,20 +12,28 @@ import Paper from "@mui/material/Paper";
 import { Typography } from "@mui/material";
 import styled from "@emotion/styled";
 
+type DataTableColumnProps = {
+  key: string;
+  label: string;
+  align?: "right" | "left" | "center";
+  render?: (value: any, row: Record<string, any>) => React.Component;
+  minWidth?: number;
+};
+
 type DataTableProps = {
   title: string;
-  headers: Array<string>;
-  data: Array<Record<string, any>>;
-  dataKeys: Array<string>;
-  actions?: Array<{
-    text: string;
-    action: (input: any) => void;
-  }>;
+  columns: Array<DataTableColumnProps>;
+  rows: Array<Record<string, any>>;
+  // actions?: Array<{
+  //   text: string;
+  //   action: (input: any) => void;
+  // }>;
 };
 
 const NoDataDisplay = styled(Box)({
   padding: "20px",
-  height: "150px",
+  maxHeight: "400px",
+  height: "100%",
   width: "100%",
   display: "flex",
   justifyContent: "center",
@@ -35,10 +43,9 @@ const NoDataDisplay = styled(Box)({
 
 const DataTable: React.FC<DataTableProps> = ({
   title,
-  headers,
-  data,
-  dataKeys,
-  actions,
+  columns,
+  rows,
+  // actions,
 }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -62,42 +69,61 @@ const DataTable: React.FC<DataTableProps> = ({
       <TableContainer
         component={Paper}
         style={{
+          height: "100%",
           padding: "0 20px",
           maxHeight: "400px",
           overflowY: "scroll",
         }}
       >
-        {data.length === 0 ? (
-          <NoDataDisplay>No data</NoDataDisplay>
-        ) : (
-          <Table sx={{ minWidth: 650 }} aria-label={title} stickyHeader>
-            <TableHead>
-              <TableRow>
-                {headers.map((header) => (
-                  <TableCell>
-                    <Typography variant="subtitle1">{header}</Typography>
-                  </TableCell>
-                ))}
-                {actions && <TableCell>Actions</TableCell>}
-              </TableRow>
-            </TableHead>
+        <Table sx={{ minWidth: 650 }} aria-label={title} stickyHeader>
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <TableCell
+                  key={column.key}
+                  align={column.align}
+                  style={{ minWidth: column.minWidth }}
+                >
+                  <Typography variant="subtitle1">{column.label}</Typography>
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
 
-            <TableBody>
-              {data
+          <TableBody>
+            {rows.length === 0 ? (
+              <TableRow>
+                <TableCell align="center" colSpan={6}>
+                  <NoDataDisplay>No data</NoDataDisplay>
+                </TableCell>
+              </TableRow>
+            ) : (
+              rows
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                   return (
                     <TableRow
-                      key={row.name}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row.code}
                     >
-                      {dataKeys.map((key) => {
-                        return <TableCell align="left">{row[key]}</TableCell>;
+                      {columns.map((column) => {
+                        const value = row[column.key];
+                        return (
+                          <TableCell
+                            key={column.key}
+                            align={column.align || "left"}
+                          >
+                            {column.render ? column.render(value, row) : value}
+                          </TableCell>
+                        );
                       })}
-                      {actions && (
+                      {/* {actions && (
                         <TableCell>
                           {actions.map(({ action, text }) => (
                             <Button
+                              key={`${text}:${row.id}`}
                               type="button"
                               variant="outlined"
                               style={{ margin: "5px" }}
@@ -107,18 +133,18 @@ const DataTable: React.FC<DataTableProps> = ({
                             </Button>
                           ))}
                         </TableCell>
-                      )}
+                      )} */}
                     </TableRow>
                   );
-                })}
-            </TableBody>
-          </Table>
-        )}
+                })
+            )}
+          </TableBody>
+        </Table>
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={data.length}
+        count={rows.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

@@ -4,12 +4,15 @@ export const authSlice = createSlice({
   name: "auth",
   initialState: {
     role: "",
+    username: "",
+    userId: "",
     jwt: "",
   },
   reducers: {
     save: (state, action) => {
-      console.log(action.payload);
       state.role = action.payload.role;
+      state.username = action.payload.username;
+      state.userId = action.payload.userId;
       state.jwt = action.payload.jwt;
     },
     reset: (state, action) => {

@@ -29,7 +29,8 @@ export const useCreateUserMutation = () => {
     onError: () => {
       console.log("handleErrror");
     },
-    onSuccess: ({ data }) => {
+    onSuccess: (data) => {
+      console.log(data);
       queryClient.invalidateQueries("readUsers");
     },
   });

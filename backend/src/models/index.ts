@@ -14,7 +14,47 @@ const sequelizeConnection = new Sequelize(
   config
 );
 
-export const BikesModel = Bikes(sequelizeConnection);
-export const UsersModel = Users(sequelizeConnection);
-export const BikeReviewsModel = BikeReviews(sequelizeConnection);
-export const ReservationsModel = Reservations(sequelizeConnection);
+const BikesModel = Bikes(sequelizeConnection);
+const UsersModel = Users(sequelizeConnection);
+const BikeReviewsModel = BikeReviews(sequelizeConnection);
+const ReservationsModel = Reservations(sequelizeConnection);
+
+BikesModel.hasMany(ReservationsModel, {
+  sourceKey: "id",
+  foreignKey: "bikeId",
+  as: "reservations",
+});
+ReservationsModel.belongsTo(BikesModel, {
+  foreignKey: "bikeId",
+  as: "bike",
+  onDelete: "CASCADE",
+});
+
+UsersModel.hasMany(ReservationsModel, {
+  sourceKey: "id",
+  foreignKey: "userId",
+  as: "reservations",
+});
+ReservationsModel.belongsTo(UsersModel, {
+  foreignKey: "bikeId",
+  as: "user",
+  onDelete: "CASCADE",
+});
+
+// UsersModel.hasMany(BikeReviewsModel, {
+//   foreignKey: "userId",
+// });
+// BikeReviewsModel.belongsTo(UsersModel, {
+//   foreignKey: "id",
+//   onDelete: "CASCADE",
+// });
+
+// BikesModel.hasMany(BikeReviewsModel, {
+//   foreignKey: "bikeId",
+// });
+// BikeReviewsModel.belongsTo(BikesModel, {
+//   foreignKey: "id",
+//   onDelete: "CASCADE",
+// });
+
+export { BikesModel, UsersModel, BikeReviewsModel, ReservationsModel };

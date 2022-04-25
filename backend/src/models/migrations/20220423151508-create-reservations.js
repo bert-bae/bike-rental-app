@@ -8,25 +8,27 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.STRING,
       },
-      user_id: {
+      userId: {
         type: Sequelize.STRING,
         references: {
           model: "Users",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
-      bike_id: {
+      bikeId: {
         type: Sequelize.STRING,
         references: {
           model: "Bikes",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
-      start_time: {
-        type: Sequelize.STRING,
+      startTime: {
+        type: Sequelize.DATE,
       },
-      end_time: {
-        type: Sequelize.STRING,
+      endTime: {
+        type: Sequelize.DATE,
       },
       status: {
         type: Sequelize.STRING,

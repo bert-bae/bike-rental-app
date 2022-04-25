@@ -1,7 +1,7 @@
 export type TBikeReviewModel = {
   id: string;
-  bike_id: string;
-  user_id: string;
+  bikeId: string;
+  userId: string;
   rating: string;
 };
 
@@ -31,9 +31,10 @@ export enum ReservationStatusEnum {
 }
 
 export type TReservationModel = {
-  user_id: string;
-  bike_id: string;
-  start_time: string;
-  end_time: string;
+  id: string;
+  userId: string;
+  bikeId: string;
+  startTime: string;
+  endTime: string;
   status: ReservationStatusEnum;
 };

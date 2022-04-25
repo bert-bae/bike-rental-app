@@ -1,9 +1,22 @@
 import { Router } from "express";
 import { userService, authService } from "../services";
 import { TUserModel, UserRoleEnum } from "../models/model.type";
-import authorize from "./middlewares/auth";
+import { authorizeRole, authorizeUser } from "./middlewares/auth";
 
 const router = Router();
+
+router.post("/", async (req, res) => {
+  const body = req.body as TUserModel;
+
+  try {
+    const newUser = await userService.create(body);
+    res.status(200).json(newUser);
+  } catch (error: any) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+});
 
 router.post("/login", async (req, res) => {
   const { username, password } = req.body as Pick<
@@ -15,6 +28,7 @@ router.post("/login", async (req, res) => {
     const token = await authService.login(username, password);
     res.status(200).json(token);
   } catch (error: any) {
+    console.log(error);
     res.status(500).json({
       error: error.message,
     });
@@ -22,23 +36,12 @@ router.post("/login", async (req, res) => {
 });
 
 router
-  .use(authorize(UserRoleEnum.Admin))
+  .use(authorizeUser)
+  .use(authorizeRole(UserRoleEnum.Admin))
   .get("/", async (req, res) => {
     try {
       const users = await userService.findAllBy();
       res.status(200).json(users);
-    } catch (error: any) {
-      res.status(500).json({
-        error: error.message,
-      });
-    }
-  })
-  .post("/", async (req, res) => {
-    const body = req.body as TUserModel;
-
-    try {
-      const newUser = await userService.create(body);
-      res.status(200).json(newUser);
     } catch (error: any) {
       res.status(500).json({
         error: error.message,
@@ -60,7 +63,7 @@ router
         updateFields.password = body.password;
       }
 
-      const newUser = await userService.updateOne(
+      const newUser = await userService.updateById(
         req.params.userId,
         updateFields
       );
@@ -74,7 +77,7 @@ router
   .delete("/:userId", async (req, res) => {
     try {
       await userService.destroy(req.params.userId);
-      res.status(200);
+      res.status(200).send();
     } catch (error: any) {
       res.status(500).json({
         error: error.message,
