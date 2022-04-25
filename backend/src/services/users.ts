@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
-import { Includeable } from "sequelize/types";
+import { FindOptions } from "sequelize/types";
 import { UsersModel } from "../models/";
 import { TUserModel } from "../models/model.type";
 import { BaseService } from "./services.type";
@@ -44,14 +44,8 @@ export class UserService extends BaseService<TUserModel> {
     return user;
   }
 
-  public async findAllBy(input?: {
-    where?: Record<string, any>;
-    includes?: Includeable;
-  }): Promise<Array<TUserModel>> {
-    const users = await this.model.findAll({
-      where: input?.where,
-      include: input?.includes,
-    });
+  public async findAllBy(input?: FindOptions): Promise<Array<TUserModel>> {
+    const users = await this.model.findAll(input);
     return users;
   }
 

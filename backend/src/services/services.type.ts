@@ -1,12 +1,9 @@
-import { Includeable } from "sequelize";
+import { FindOptions } from "sequelize";
 
 export abstract class BaseService<TEntity> {
   protected abstract create(entity: TEntity): Promise<any>;
 
-  protected abstract findAllBy(input?: {
-    where?: Record<string, any>;
-    includes?: Includeable;
-  }): Promise<Array<any>>;
+  protected abstract findAllBy(input?: FindOptions): Promise<Array<any>>;
 
   protected abstract findById(id: string): Promise<any | null>;
 

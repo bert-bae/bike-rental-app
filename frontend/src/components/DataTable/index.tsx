@@ -13,6 +13,7 @@ import { Typography } from "@mui/material";
 import styled from "@emotion/styled";
 
 type DataTableColumnProps = {
+  id?: string;
   key: string;
   label: string;
   align?: "right" | "left" | "center";
@@ -24,10 +25,7 @@ type DataTableProps = {
   title: string;
   columns: Array<DataTableColumnProps>;
   rows: Array<Record<string, any>>;
-  // actions?: Array<{
-  //   text: string;
-  //   action: (input: any) => void;
-  // }>;
+  TableActions?: React.ReactElement;
 };
 
 const NoDataDisplay = styled(Box)({
@@ -45,7 +43,7 @@ const DataTable: React.FC<DataTableProps> = ({
   title,
   columns,
   rows,
-  // actions,
+  TableActions,
 }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -66,6 +64,7 @@ const DataTable: React.FC<DataTableProps> = ({
 
   return (
     <Box>
+      {TableActions}
       <TableContainer
         component={Paper}
         style={{
@@ -80,7 +79,7 @@ const DataTable: React.FC<DataTableProps> = ({
             <TableRow>
               {columns.map((column) => (
                 <TableCell
-                  key={column.key}
+                  key={column.id || column.key}
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
                 >
@@ -108,32 +107,17 @@ const DataTable: React.FC<DataTableProps> = ({
                       tabIndex={-1}
                       key={row.code}
                     >
-                      {columns.map((column) => {
+                      {columns.map((column, i) => {
                         const value = row[column.key];
                         return (
                           <TableCell
-                            key={column.key}
+                            key={`row:${column.id || column.key}:${i}`}
                             align={column.align || "left"}
                           >
                             {column.render ? column.render(value, row) : value}
                           </TableCell>
                         );
                       })}
-                      {/* {actions && (
-                        <TableCell>
-                          {actions.map(({ action, text }) => (
-                            <Button
-                              key={`${text}:${row.id}`}
-                              type="button"
-                              variant="outlined"
-                              style={{ margin: "5px" }}
-                              onClick={() => action(row)}
-                            >
-                              {text}
-                            </Button>
-                          ))}
-                        </TableCell>
-                      )} */}
                     </TableRow>
                   );
                 })

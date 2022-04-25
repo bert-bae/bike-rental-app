@@ -1,32 +1,32 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
-import reservationsApi from "../api/reservations";
+import bikeReviewsApi from "../api/bikeReviews";
 
-export const useGetReservations = () => {
+export const useGetReviews = () => {
   const { jwt } = useSelector((state) => state.auth);
-  const readBikes = async () => {
-    return reservationsApi.read({ headers: { Authorization: jwt } });
+  const readReviews = async () => {
+    return bikeReviewsApi.read({ headers: { Authorization: jwt } });
   };
 
   return useQuery({
-    queryFn: readBikes,
-    queryKey: ["readReservations"],
+    queryFn: readReviews,
+    queryKey: ["readReviews"],
     onError: () => {},
     onSuccess: () => {},
   });
 };
 
-export const useCreateReservationMutation = () => {
+export const useCreateReviewMutation = () => {
   const queryClient = useQueryClient();
   const { jwt } = useSelector((state) => state.auth);
-  const reserveBike = async (reservation) => {
-    return reservationsApi.create({
-      body: reservation,
+  const reviewBike = async (review) => {
+    return bikeReviewsApi.create({
+      body: review,
       headers: { Authorization: jwt },
     });
   };
 
-  return useMutation(reserveBike, {
+  return useMutation(reviewBike, {
     onError: () => {},
     onSuccess: () => {
       queryClient.invalidateQueries("readReservations");
@@ -34,18 +34,18 @@ export const useCreateReservationMutation = () => {
   });
 };
 
-export const useUpdateReservationMutation = () => {
+export const useUpdateReviewMutation = () => {
   const queryClient = useQueryClient();
   const { jwt } = useSelector((state) => state.auth);
-  const updateReservation = async ({ id, reservation }) => {
-    return reservationsApi.edit({
+  const updateReview = async ({ id, review }) => {
+    return bikeReviewsApi.edit({
       id,
-      body: reservation, //  { status: "Cancelled" } -> Payload for cancelling
+      body: review, //  { rating: number } -> Payload for cancelling
       headers: { Authorization: jwt },
     });
   };
 
-  return useMutation(updateReservation, {
+  return useMutation(updateReview, {
     onError: () => {},
     onSuccess: () => {
       queryClient.invalidateQueries("readReservations");

@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import { useGetBikesQuery } from "../../../../services/hooks/bikes";
 import { useCreateReservationMutation } from "../../../../services/hooks/reservations";
 import { TBikeModel, TReservationModel } from "../../../../types/entities.type";
+import { BikeFilters } from "../../../../components/DataTable/EntityFilters/BikeTableFilters";
 
 const columns = [
   { key: "model", label: "Model" },
@@ -23,9 +24,10 @@ function formatData(bike: TBikeModel) {
 }
 
 const useMemberBikesWidget = () => {
-  const { data: bikes } = useGetBikesQuery();
   const { mutate: reserveBike, isSuccess: reserveBikeSuccess } =
     useCreateReservationMutation();
+  const [filters, setFilters] = React.useState<BikeFilters>();
+  const { data: bikes } = useGetBikesQuery(filters);
   const [formVisible, setFormVisible] = React.useState(false);
   const [bikeToReserve, setBikeToReserve] = React.useState<TBikeModel>();
 
@@ -47,6 +49,14 @@ const useMemberBikesWidget = () => {
   const resetForm = () => {
     toggleForm(false);
     setBikeToReserve(undefined);
+  };
+
+  const handleFilteredSearch = (filters: BikeFilters) => {
+    setFilters(filters);
+  };
+
+  const handleSearchReset = () => {
+    setFilters(undefined);
   };
 
   const actionColumn = {
@@ -79,6 +89,8 @@ const useMemberBikesWidget = () => {
     formVisible,
     columns: [...columns, actionColumn],
     toggleForm,
+    onSearch: handleFilteredSearch,
+    onSearchReset: handleSearchReset,
     onReservationSubmit: handleReservationSubmit,
     onCancelReservationForm: resetForm,
   };

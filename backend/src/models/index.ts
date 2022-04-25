@@ -41,20 +41,25 @@ ReservationsModel.belongsTo(UsersModel, {
   onDelete: "CASCADE",
 });
 
-// UsersModel.hasMany(BikeReviewsModel, {
-//   foreignKey: "userId",
-// });
-// BikeReviewsModel.belongsTo(UsersModel, {
-//   foreignKey: "id",
-//   onDelete: "CASCADE",
-// });
+UsersModel.hasMany(BikeReviewsModel, {
+  sourceKey: "id",
+  foreignKey: "userId",
+  as: "reviews",
+});
+BikeReviewsModel.belongsTo(UsersModel, {
+  foreignKey: "id",
+  onDelete: "CASCADE",
+});
 
-// BikesModel.hasMany(BikeReviewsModel, {
-//   foreignKey: "bikeId",
-// });
-// BikeReviewsModel.belongsTo(BikesModel, {
-//   foreignKey: "id",
-//   onDelete: "CASCADE",
-// });
+BikesModel.hasMany(BikeReviewsModel, {
+  sourceKey: "id",
+  foreignKey: "bikeId",
+  as: "reviews",
+});
+
+BikeReviewsModel.belongsTo(BikesModel, {
+  foreignKey: "id",
+  onDelete: "CASCADE",
+});
 
 export { BikesModel, UsersModel, BikeReviewsModel, ReservationsModel };

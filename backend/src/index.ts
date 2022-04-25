@@ -20,6 +20,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/users", userRoutes);
 app.use("/bikes", authorizeUser, bikeRoutes);
+app.use("/reviews", authorizeUser, reservationRoutes);
 app.use("/reservations", authorizeUser, reservationRoutes);
 
 app.listen(<string>process.env.PORT, () => {

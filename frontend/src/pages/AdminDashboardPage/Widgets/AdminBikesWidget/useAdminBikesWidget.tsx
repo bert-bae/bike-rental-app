@@ -8,6 +8,7 @@ import {
   useGetBikesQuery,
 } from "../../../../services/hooks/bikes";
 import { TBikeModel } from "../../../../types/entities.type";
+import { BikeFilters } from "../../../../components/DataTable/EntityFilters/BikeTableFilters";
 
 const columns = [
   { key: "model", label: "Model" },
@@ -25,7 +26,8 @@ const columns = [
 
 const useAdminBikesWidget = () => {
   const [bikeToEdit, setBikeToEdit] = React.useState<TBikeModel | void>();
-  const { data: bikes } = useGetBikesQuery();
+  const [filters, setFilters] = React.useState<BikeFilters>();
+  const { data: bikes } = useGetBikesQuery(filters);
   const { mutate: createBike, isSuccess: createSuccess } =
     useCreateBikeMutation();
   const { mutate: editBike, isSuccess: editSuccess } = useEditBikeMutation();
@@ -61,6 +63,14 @@ const useAdminBikesWidget = () => {
 
   const handleBikeDelete = (bike: TBikeModel) => {
     deleteBike(bike.id);
+  };
+
+  const handleFilteredSearch = (filters: BikeFilters) => {
+    setFilters(filters);
+  };
+
+  const handleSearchReset = () => {
+    setFilters(undefined);
   };
 
   const resetForm = () => {
@@ -109,6 +119,8 @@ const useAdminBikesWidget = () => {
     formVisible,
     columns: [...columns, actionColumn],
     toggleForm,
+    onSearch: handleFilteredSearch,
+    onSearchReset: handleSearchReset,
     onBikeFormSubmit: handleBikeFormSubmit,
     onCancelBikeForm: resetForm,
   };

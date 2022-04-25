@@ -1,4 +1,4 @@
-import { Includeable } from "sequelize/types";
+import { FindOptions } from "sequelize/types";
 import { ReservationsModel } from "../models/";
 import { ReservationStatusEnum, TReservationModel } from "../models/model.type";
 import { BaseService } from "./services.type";
@@ -26,14 +26,10 @@ export class ReservationsService extends BaseService<TReservationModel> {
     return reservation;
   }
 
-  public async findAllBy(input?: {
-    where?: Record<string, any>;
-    includes?: Includeable;
-  }): Promise<Array<TReservationModel>> {
-    const reservations = await this.model.findAll({
-      where: input?.where,
-      include: input?.includes,
-    });
+  public async findAllBy(
+    input?: FindOptions
+  ): Promise<Array<TReservationModel & Record<string, any>>> {
+    const reservations = await this.model.findAll(input);
     return reservations;
   }
 

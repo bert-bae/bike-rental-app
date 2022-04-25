@@ -11,9 +11,7 @@ export const useGetUsersQuery = () => {
   return useQuery({
     queryFn: readBikes,
     queryKey: ["readUsers"],
-    onError: () => {
-      console.log("handleErrror");
-    },
+    onError: () => {},
     onSuccess: ({ data }) => {},
   });
 };
@@ -26,9 +24,7 @@ export const useCreateUserMutation = () => {
   };
 
   return useMutation(create, {
-    onError: () => {
-      console.log("handleErrror");
-    },
+    onError: () => {},
     onSuccess: (data) => {
       console.log(data);
       queryClient.invalidateQueries("readUsers");
@@ -48,9 +44,7 @@ export const useEditUserMutation = () => {
   };
 
   return useMutation(edit, {
-    onError: () => {
-      console.log("handleErrror");
-    },
+    onError: () => {},
     onSuccess: () => {
       queryClient.invalidateQueries("readUsers");
     },
@@ -68,9 +62,7 @@ export const useDeleteUserMutation = () => {
   };
 
   return useMutation(destroyBike, {
-    onError: () => {
-      console.log("handleErrror");
-    },
+    onError: () => {},
     onSuccess: () => {
       queryClient.invalidateQueries("readUsers");
     },

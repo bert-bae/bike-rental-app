@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 import DrawerForm from "../../../../components/DrawerForm";
 import DataTable from "../../../../components/DataTable";
+import BikeTableFilters from "../../../../components/DataTable/EntityFilters/BikeTableFilters";
 import WidgetWrapper from "../../../../components/WidgetWrapper";
 import BikeForm from "../../../../components/EntityForms/BikeForm";
 import useAdminBikesWidget from "./useAdminBikesWidget";
@@ -15,6 +16,8 @@ const AdminBikesWidget: React.FC<{}> = ({}) => {
     toggleForm,
     onBikeFormSubmit,
     onCancelBikeForm,
+    onSearch,
+    onSearchReset,
   } = useAdminBikesWidget();
 
   return (
@@ -28,7 +31,9 @@ const AdminBikesWidget: React.FC<{}> = ({}) => {
         <Typography variant="h6">
           <b>Bikes</b>
         </Typography>
-        <Button onClick={() => toggleForm(true)}>Create Bike</Button>
+        <Button variant="contained" onClick={() => toggleForm(true)}>
+          Create Bike
+        </Button>
       </Box>
       <DrawerForm visible={formVisible} onClose={onCancelBikeForm}>
         <BikeForm
@@ -37,6 +42,7 @@ const AdminBikesWidget: React.FC<{}> = ({}) => {
           onCancel={onCancelBikeForm}
         />
       </DrawerForm>
+      <BikeTableFilters onSearch={onSearch} onReset={onSearchReset} />
       <DataTable title="Bikes" rows={bikes} columns={columns as any} />
     </WidgetWrapper>
   );

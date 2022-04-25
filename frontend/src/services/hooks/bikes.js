@@ -2,18 +2,17 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
 import bikesApi from "../api/bikes";
 
-export const useGetBikesQuery = () => {
+export const useGetBikesQuery = (keys) => {
   const { jwt } = useSelector((state) => state.auth);
-  const readBikes = async () => {
-    return bikesApi.read({ headers: { Authorization: jwt } });
+  const readBikes = async ({ queryKey }) => {
+    const [_key, filters] = queryKey;
+    return bikesApi.read({ filters, headers: { Authorization: jwt } });
   };
 
   return useQuery({
     queryFn: readBikes,
-    queryKey: ["readBikes"],
-    onError: () => {
-      console.log("handleErrror");
-    },
+    queryKey: ["readBikes", keys],
+    onError: () => {},
     onSuccess: ({ data }) => {},
   });
 };
@@ -27,9 +26,7 @@ export const useGetBikeQuery = () => {
   return useQuery({
     queryFn: readBike,
     queryKey: ["readBike"],
-    onError: () => {
-      console.log("handleErrror");
-    },
+    onError: () => {},
     onSuccess: ({ data }) => {},
   });
 };
@@ -42,9 +39,7 @@ export const useCreateBikeMutation = () => {
   };
 
   return useMutation(create, {
-    onError: () => {
-      console.log("handleErrror");
-    },
+    onError: () => {},
     onSuccess: ({ data }) => {
       queryClient.invalidateQueries("readBikes");
     },
@@ -63,9 +58,7 @@ export const useEditBikeMutation = () => {
   };
 
   return useMutation(edit, {
-    onError: () => {
-      console.log("handleErrror");
-    },
+    onError: () => {},
     onSuccess: () => {
       queryClient.invalidateQueries("readBikes");
     },
@@ -83,9 +76,7 @@ export const useDeleteBikeMutation = () => {
   };
 
   return useMutation(destroyBike, {
-    onError: () => {
-      console.log("handleErrror");
-    },
+    onError: () => {},
     onSuccess: () => {
       queryClient.invalidateQueries("readBikes");
     },

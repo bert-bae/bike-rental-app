@@ -2,7 +2,7 @@ export type TBikeReviewModel = {
   id: string;
   bikeId: string;
   userId: string;
-  rating: string;
+  rating: number;
 };
 
 export type TBikeModel = {

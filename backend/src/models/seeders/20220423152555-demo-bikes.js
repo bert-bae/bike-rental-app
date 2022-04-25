@@ -2,7 +2,7 @@
 const { v4 } = require("uuid");
 const { randomizeTrait, fakeEntityArray } = require("./utils/seed-helper");
 
-const colors = ["red", "black", "white", "blue"];
+const colors = ["Red", "Black", "White", "Blue", "Grey", "Yellow"];
 const models = ["Contend", "Propel", "Mountain", "Cypress", "Revolt"];
 const location = [
   "Vancouver",

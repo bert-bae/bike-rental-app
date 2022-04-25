@@ -28,7 +28,9 @@ const AdminBikesWidget: React.FC<{}> = ({}) => {
         <Typography variant="h6">
           <b>Users</b>
         </Typography>
-        <Button onClick={() => toggleForm(true)}>Create User</Button>
+        <Button variant="contained" onClick={() => toggleForm(true)}>
+          Create User
+        </Button>
       </Box>
       <DrawerForm visible={formVisible} onClose={onCancelUserForm}>
         <UserForm
