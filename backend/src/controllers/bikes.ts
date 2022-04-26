@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Op } from "sequelize";
+import { Sequelize, Op, where } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 import { authorizeRole } from "./middlewares/auth";
 import {
@@ -14,33 +14,63 @@ import {
   TUserModel,
   UserRoleEnum,
 } from "../models/model.type";
+import { BikeReviewsModel } from "../models";
 
 const router = Router();
 
-const buildBikeFilters = (filters: {
+const buildBikeFilters = (filters?: {
   color: string;
   model: string;
   rating: string;
 }) => {
-  const operation: Record<string, any> = {};
+  const operation: Record<string, any> = {
+    where: {},
+    having: {},
+  };
+
+  if (!filters) {
+    return operation;
+  }
+
   if (filters.color) {
-    operation.color = { [Op.in]: filters.color.split(",") || [] };
+    operation.where.color = { [Op.in]: filters.color.split(",") || [] };
   }
   if (filters.model) {
-    operation.model = { [Op.in]: filters.model.split(",") || [] };
+    operation.where.model = { [Op.in]: filters.model.split(",") || [] };
   }
   if (filters.rating) {
-    operation.rating = { [Op.in]: filters.rating.split(",") || [] };
+    operation.having.rating = {
+      [Op.between]: [filters.rating, 5],
+    };
   }
+
   return operation;
 };
 
 router.get("/", async (req, res) => {
-  const filters = req.query as any;
+  const { where, having } = buildBikeFilters(req.query as any);
+
   try {
     const bikes = await bikeService.findAllBy({
-      where: filters ? buildBikeFilters(filters) : undefined,
+      where,
+      having,
+      attributes: [
+        "id",
+        "color",
+        "location",
+        "model",
+        [Sequelize.fn("AVG", Sequelize.col("reviews.rating")), "rating"],
+      ],
+      group: ["Bikes.id", "rating"],
+      include: [
+        {
+          model: BikeReviewsModel,
+          as: "reviews",
+          attributes: [],
+        },
+      ],
     });
+
     res.status(200).send(bikes);
   } catch (error) {
     res.status(500).send({ error });

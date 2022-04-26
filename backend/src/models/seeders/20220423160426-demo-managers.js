@@ -11,7 +11,7 @@ module.exports = {
         {
           id: v4(),
           name: "Super Admin",
-          username: "superadmin2022",
+          username: "superadmin",
           password:
             "$2b$10$.DQWFymkQWTo9bgFkW9aQ.ww6yqf2ykWAW1g9Kr4HliyZc7YrOEm.",
           role: "Admin",

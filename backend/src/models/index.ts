@@ -11,7 +11,7 @@ const sequelizeConnection = new Sequelize(
   config.database,
   config.username,
   config.password,
-  config
+  { ...config, operatorsAliases: true }
 );
 
 const BikesModel = Bikes(sequelizeConnection);

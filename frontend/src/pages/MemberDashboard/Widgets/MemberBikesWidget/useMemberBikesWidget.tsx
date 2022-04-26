@@ -4,12 +4,25 @@ import { useGetBikesQuery } from "../../../../services/hooks/bikes";
 import { useCreateReservationMutation } from "../../../../services/hooks/reservations";
 import { TBikeModel, TReservationModel } from "../../../../types/entities.type";
 import { BikeFilters } from "../../../../components/DataTable/EntityFilters/BikeTableFilters";
+import ReviewStars from "../../../../components/ReviewStars";
 
 const columns = [
   { key: "model", label: "Model" },
   { key: "color", label: "Color" },
   { key: "location", label: "Location" },
-  { key: "rating", label: "Rating" },
+  {
+    key: "rating",
+    label: "Rating",
+    render: (rating: string, row: any) => {
+      return (
+        <ReviewStars
+          size={16}
+          value={rating ? Math.round(Number(rating)) : 0}
+          readonly={true}
+        />
+      );
+    },
+  },
   {
     key: "available",
     label: "Available",

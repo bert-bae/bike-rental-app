@@ -92,7 +92,7 @@ const DataTable: React.FC<DataTableProps> = ({
           <TableBody>
             {rows.length === 0 ? (
               <TableRow>
-                <TableCell align="center" colSpan={6}>
+                <TableCell align="center" colSpan={columns.length}>
                   <NoDataDisplay>No data</NoDataDisplay>
                 </TableCell>
               </TableRow>
