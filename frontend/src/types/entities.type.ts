@@ -14,6 +14,7 @@ export type TBikeModel = {
   available: boolean;
 } & {
   location?: TBikeLotsModel;
+  reservations?: TReservationModel[];
 };
 
 export enum UserRoleEnum {

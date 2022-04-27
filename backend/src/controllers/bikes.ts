@@ -187,6 +187,7 @@ const getBike = async (req: Request, res: Response, next: NextFunction) => {
           },
         },
       },
+      order: [[Sequelize.col("startTime"), "ASC"]],
     });
     res.status(200).send(bike);
   } catch (error) {

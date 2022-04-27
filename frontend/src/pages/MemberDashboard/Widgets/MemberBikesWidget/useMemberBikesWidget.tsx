@@ -1,4 +1,5 @@
 import React from "react";
+import * as dateFns from "date-fns";
 import debounce from "lodash.debounce";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -62,7 +63,9 @@ const columns = [
 const useMemberBikesWidget = () => {
   const { mutate: reserveBike, isSuccess: reserveBikeSuccess } =
     useCreateReservationMutation();
-  const [filters, setFilters] = React.useState<BikeFilters>({});
+  const [filters, setFilters] = React.useState<BikeFilters>({
+    availableFrom: dateFns.addMinutes(new Date(), 1).toISOString(),
+  });
   const { data: bikes } = useGetReservableBikesQuery(filters);
   const [formVisible, setFormVisible] = React.useState(false);
   const [bikeToReserve, setBikeToReserve] = React.useState<TBikeModel>();
