@@ -15,9 +15,11 @@ export const authSlice = createSlice({
       state.userId = action.payload.userId;
       state.jwt = action.payload.jwt;
     },
-    reset: (state, action) => {
+    reset: (state) => {
       state.role = "";
       state.jwt = "";
+      state.userId = "";
+      state.username = "";
     },
   },
 });

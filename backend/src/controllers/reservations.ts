@@ -86,7 +86,7 @@ const getReservationsForMembers = async (
           attributes: [],
         },
       ],
-      order: [["startTime", "desc"]],
+      order: [["startTime", "ASC"]],
     });
     res.status(200).send(reservations);
   } catch (error) {
