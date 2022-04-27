@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import React from "react";
 import Page from "../../components/Page";
 import MemberBikesWidget from "./Widgets/MemberBikesWidget";
@@ -11,10 +11,10 @@ const MemberDashboard: MemberDashboardProps = (props) => {
     <Page pageTitle="Member Dashboard">
       <Grid container spacing={4}>
         <Grid item lg={12} md={12} sm={12}>
-          <MemberReservationsWidget />
+          <MemberBikesWidget />
         </Grid>
         <Grid item lg={12} md={12} sm={12}>
-          <MemberBikesWidget />
+          <MemberReservationsWidget />
         </Grid>
       </Grid>
     </Page>

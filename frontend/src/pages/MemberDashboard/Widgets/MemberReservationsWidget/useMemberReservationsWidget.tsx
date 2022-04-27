@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import * as dateFns from "date-fns";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import {
   useUpdateReservationMutation,
-  useGetReservations,
+  useGetUserReservations,
 } from "../../../../services/hooks/reservations";
 import {
   useCreateReviewMutation,
@@ -36,14 +37,6 @@ const columns = [
     },
   },
   {
-    id: "bike:location",
-    key: "bike",
-    label: "Location",
-    render: (bike: TBikeModel) => {
-      return bike?.location;
-    },
-  },
-  {
     key: "startTime",
     label: "Start Time",
     render: (value: string) => {
@@ -67,7 +60,31 @@ const columns = [
       return dateFns.format(date, "Pp");
     },
   },
-  { key: "status", label: "Status" },
+  {
+    key: "status",
+    label: "Status",
+    render: (value: string, row: any) => {
+      if (value === ReservationStatusEnum.Cancelled) {
+        <Chip label="Cancelled" color="warning" variant="outlined" />;
+      }
+
+      const startDate = new Date(row.startTime);
+      const endDate = new Date(row.endTime);
+      const now = new Date().getTime();
+
+      const ongoing = now < endDate.getTime() && startDate.getTime() < now;
+      if (ongoing) {
+        return <Chip label="Active" color="success" variant="outlined" />;
+      }
+
+      const completed = now > endDate.setHours(endDate.getHours() - 1);
+      if (completed) {
+        return <Chip label="Complete" color="info" variant="outlined" />;
+      }
+
+      return <Chip label="Pending" color="primary" variant="outlined" />;
+    },
+  },
 ];
 
 type BikeWithReviews = TBikeModel & { reviews: TBikeReviewModel[] };
@@ -75,7 +92,7 @@ type BikeWithReviews = TBikeModel & { reviews: TBikeReviewModel[] };
 const useMemberReservationsWidget = () => {
   const [bikeToReview, setBikeToReview] = React.useState<BikeWithReviews>();
   const [reviewFormVisible, setReviewFormVisible] = React.useState(false);
-  const { data: reservations } = useGetReservations();
+  const { data: reservations } = useGetUserReservations();
   const { mutate: updateReservation } = useUpdateReservationMutation();
   const { mutate: createReview, isSuccess: createReviewSuccess } =
     useCreateReviewMutation();
@@ -85,7 +102,10 @@ const useMemberReservationsWidget = () => {
   const cancelReservation = (reservation: TReservationModel) => {
     updateReservation({
       id: reservation.id,
-      reservation: { status: ReservationStatusEnum.Cancelled },
+      reservation: {
+        bikeId: reservation.bikeId,
+        status: ReservationStatusEnum.Cancelled,
+      },
     });
   };
 
@@ -144,15 +164,7 @@ const useMemberReservationsWidget = () => {
             disabled={!!review}
             onClick={() => showReviewForm(value)}
           >
-            {!review ? (
-              "Review"
-            ) : (
-              <ReviewStars
-                size={16}
-                value={review && review.rating}
-                readonly={true}
-              />
-            )}
+            {!review ? "Review" : Math.round(Number(review.rating))}
           </Button>
         );
       },
@@ -161,7 +173,13 @@ const useMemberReservationsWidget = () => {
       key: "actions",
       label: "Actions",
       render: (value: any, row: TReservationModel): React.ReactElement => {
-        if (row.status === ReservationStatusEnum.Cancelled) {
+        const date = new Date(row.startTime);
+        const cancellationLimit =
+          new Date().getTime() > date.setHours(date.getHours() - 1);
+        if (
+          row.status === ReservationStatusEnum.Cancelled ||
+          cancellationLimit
+        ) {
           return <Box> - </Box>;
         }
 

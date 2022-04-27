@@ -7,10 +7,11 @@ import WidgetWrapper from "../../../../components/WidgetWrapper";
 import BikeForm from "../../../../components/EntityForms/BikeForm";
 import useAdminBikesWidget from "./useAdminBikesWidget";
 
-const AdminBikesWidget: React.FC<{}> = ({}) => {
+const AdminBikesWidget: React.FC<any> = (props) => {
   const {
     bikeToEdit,
     bikes,
+    bikeLots,
     formVisible,
     columns,
     toggleForm,
@@ -38,6 +39,7 @@ const AdminBikesWidget: React.FC<{}> = ({}) => {
       <DrawerForm visible={formVisible} onClose={onCancelBikeForm}>
         <BikeForm
           bike={bikeToEdit}
+          bikeLots={bikeLots}
           onSubmit={onBikeFormSubmit}
           onCancel={onCancelBikeForm}
         />

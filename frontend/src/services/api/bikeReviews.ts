@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
 import { TBikeReviewModel } from "../../types/entities.type";
 import client from "./baseClient";
+/* eslint-disable */
 
 const read = async (input: {
   headers: { Authorization: string };

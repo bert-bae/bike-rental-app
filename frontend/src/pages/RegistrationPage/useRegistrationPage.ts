@@ -15,7 +15,7 @@ const useLoginPage = () => {
     if (isSuccess) {
       navigate("/login");
     }
-  }, [isSuccess]);
+  }, [isSuccess, navigate]);
 
   return {
     onSubmit: handleSubmit,

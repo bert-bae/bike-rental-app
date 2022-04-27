@@ -22,8 +22,11 @@ export class BikesService extends BaseService<TBikeModel> {
     return bike;
   }
 
-  public async findById(id: string): Promise<TBikeModel | null> {
-    const bike = await this.model.findByPk(id);
+  public async findById(
+    id: string,
+    options?: FindOptions
+  ): Promise<TBikeModel | null> {
+    const bike = await this.model.findByPk(id, options);
     return bike;
   }
 

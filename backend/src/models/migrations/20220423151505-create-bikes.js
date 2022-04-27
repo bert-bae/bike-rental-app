@@ -8,13 +8,21 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.STRING,
       },
+      bikeLotId: {
+        type: Sequelize.STRING,
+        references: {
+          model: "BikeLots",
+          key: "id",
+        },
+      },
+      available: {
+        type: Sequelize.BOOLEAN,
+        default: true,
+      },
       model: {
         type: Sequelize.STRING,
       },
       color: {
-        type: Sequelize.STRING,
-      },
-      location: {
         type: Sequelize.STRING,
       },
       createdAt: {

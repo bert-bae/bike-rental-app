@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import { TBikeModel } from "../../types/entities.type";
 import client from "./baseClient";
 import { queryStringConstructor } from "./helpers/queryStrings";
+/* eslint-disable */
 
 const read = async (input: {
   filters: Record<string, any>;
@@ -30,43 +31,7 @@ const readById = async (input: {
   return bikes.data;
 };
 
-const create = async (input: {
-  body: TBikeModel;
-  headers: { Authorization: string };
-}): Promise<TBikeModel> => {
-  const bike: AxiosResponse<TBikeModel> = await client.post(
-    "/bikes",
-    input.body,
-    {
-      headers: input.headers,
-    }
-  );
-  return bike.data;
-};
-
-const edit = async (input: {
-  id: string;
-  body: TBikeModel;
-  headers: { Authorization: string };
-}): Promise<void> => {
-  await client.put(`/bikes/${input.id}`, input.body, {
-    headers: input.headers,
-  });
-};
-
-const destroy = async (input: {
-  id: string;
-  headers: { Authorization: string };
-}): Promise<void> => {
-  await client.delete(`/bikes/${input.id}`, {
-    headers: input.headers,
-  });
-};
-
 export default {
   read,
   readById,
-  create,
-  edit,
-  destroy,
 };

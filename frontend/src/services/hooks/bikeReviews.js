@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
 import bikeReviewsApi from "../api/bikeReviews";
+/* eslint-disable */
 
 export const useGetReviews = () => {
   const { jwt } = useSelector((state) => state.auth);

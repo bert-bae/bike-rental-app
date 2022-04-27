@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
 import { TBikeModel, TReservationModel } from "../../types/entities.type";
 import client from "./baseClient";
+/* eslint-disable */
 
 type TReservations = {
   bike: TBikeModel;

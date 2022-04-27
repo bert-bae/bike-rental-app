@@ -1,7 +1,7 @@
 import React from "react";
 import ReviewStars from "../../ReviewStars";
 import Box from "@mui/material/Box";
-import { TBikeReviewModel, TBikeModel } from "../../../types/entities.type";
+import { TBikeReviewModel } from "../../../types/entities.type";
 
 type BikeReviewFormProps = {
   review?: TBikeReviewModel;

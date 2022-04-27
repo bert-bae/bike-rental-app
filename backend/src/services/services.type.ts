@@ -5,7 +5,10 @@ export abstract class BaseService<TEntity> {
 
   protected abstract findAllBy(input?: FindOptions): Promise<Array<any>>;
 
-  protected abstract findById(id: string): Promise<any | null>;
+  protected abstract findById(
+    id: string,
+    options: FindOptions
+  ): Promise<any | null>;
 
   protected abstract updateById(id: string, update: TEntity): Promise<void>;
 

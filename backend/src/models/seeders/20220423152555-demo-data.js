@@ -1,7 +1,7 @@
 "use strict";
-const { v4 } = require("uuid");
 const {
   fakeBikes,
+  fakeBikeLots,
   fakeReservations,
   fakeReviews,
   fakeUsers,
@@ -9,16 +9,23 @@ const {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    queryInterface.bulkInsert("Users", fakeUsers, {});
-    queryInterface.bulkInsert("Bikes", fakeBikes, {});
-    queryInterface.bulkInsert("Reservations", fakeReservations, {});
-    queryInterface.bulkInsert("BikeReviews", fakeReviews, {});
+    await queryInterface.bulkInsert("Users", fakeUsers, {});
+    await queryInterface.bulkInsert(
+      "BikeLots",
+      fakeBikeLots,
+      {},
+      { address: { type: new Sequelize.JSON() } }
+    );
+    await queryInterface.bulkInsert("Bikes", fakeBikes, {});
+    await queryInterface.bulkInsert("Reservations", fakeReservations, {});
+    await queryInterface.bulkInsert("BikeReviews", fakeReviews, {});
   },
 
   async down(queryInterface, Sequelize) {
-    queryInterface.bulkDelete("Bikes", null, {});
-    queryInterface.bulkInsert("Users", null, {});
-    queryInterface.bulkInsert("Reservations", null, {});
-    queryInterface.bulkInsert("BikeReviews", null, {});
+    await queryInterface.bulkDelete("BikeLots", null, {});
+    await queryInterface.bulkDelete("Bikes", null, {});
+    await queryInterface.bulkDelete("Users", null, {});
+    await queryInterface.bulkDelete("Reservations", null, {});
+    await queryInterface.bulkDelete("BikeReviews", null, {});
   },
 };

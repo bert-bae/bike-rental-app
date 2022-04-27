@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
 import usersApi from "../api/users";
+import adminUsersApi from "../api/admin/users";
+/* eslint-disable */
 
 export const useGetUsersQuery = () => {
   const { jwt } = useSelector((state) => state.auth);
   const readBikes = async () => {
-    return usersApi.read({ headers: { Authorization: jwt } });
+    return adminUsersApi.read({ headers: { Authorization: jwt } });
   };
 
   return useQuery({
@@ -26,7 +28,6 @@ export const useCreateUserMutation = () => {
   return useMutation(create, {
     onError: () => {},
     onSuccess: (data) => {
-      console.log(data);
       queryClient.invalidateQueries("readUsers");
     },
   });
@@ -36,7 +37,7 @@ export const useEditUserMutation = () => {
   const queryClient = useQueryClient();
   const { jwt } = useSelector((state) => state.auth);
   const edit = async ({ id, ...user }) => {
-    return usersApi.edit({
+    return adminUsersApi.edit({
       id,
       body: user,
       headers: { Authorization: jwt },
@@ -55,7 +56,7 @@ export const useDeleteUserMutation = () => {
   const queryClient = useQueryClient();
   const { jwt } = useSelector((state) => state.auth);
   const destroyBike = async (id) => {
-    return usersApi.destroy({
+    return adminUsersApi.destroy({
       id,
       headers: { Authorization: jwt },
     });

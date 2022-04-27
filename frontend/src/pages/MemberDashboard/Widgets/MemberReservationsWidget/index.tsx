@@ -6,7 +6,7 @@ import useMemberReservationsWidget from "./useMemberReservationsWidget";
 import FormDialogWrapper from "../../../../components/FormDialogWrapper";
 import BikeReviewForm from "../../../../components/EntityForms/BikeReviewForm";
 
-const MemberReservationsWidget: React.FC<{}> = ({}) => {
+const MemberReservationsWidget: React.FC<any> = (props) => {
   const {
     reservations,
     reviewFormVisible,

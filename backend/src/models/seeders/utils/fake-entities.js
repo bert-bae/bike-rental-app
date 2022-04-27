@@ -1,28 +1,90 @@
 const { v4 } = require("uuid");
 const { randomizeTrait, fakeEntityArray } = require("./seed-helper");
+const { Sequelize } = require("sequelize");
+
+const fakeBikeLots = [
+  {
+    id: v4(),
+    geom: "POINT(49.263903 -123.2094624)",
+    lotName: "Fire Bikes",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    address: {
+      city: "Vancouver",
+      street: "123 Fire Lane",
+      postalCode: "V1V1V1",
+      country: "CA",
+      province: "BC",
+    },
+  },
+  {
+    id: v4(),
+    geom: "POINT(49.285923 -123.115219)",
+    lotName: "Water Bikes",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    address: {
+      city: "Vancouver",
+      street: "123 Water Lane",
+      postalCode: "V1V1V1",
+      country: "CA",
+      province: "BC",
+    },
+  },
+  {
+    id: v4(),
+    geom: "POINT(49.244247 -122.966747)",
+    lotName: "Earth Bikes",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    address: {
+      city: "Burnaby",
+      street: "123 Earth Lane",
+      postalCode: "V1V1V1",
+      country: "CA",
+      province: "BC",
+    },
+  },
+  {
+    id: v4(),
+    geom: "POINT(49.285550 -122.792840)",
+    lotName: "Air Bikes",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    address: {
+      city: "Vancouver",
+      street: "123 Air Lane",
+      postalCode: "V1V1V1",
+      country: "CA",
+      province: "BC",
+    },
+  },
+  {
+    id: v4(),
+    geom: "POINT(49.163527 -122.846489)",
+    lotName: "Mud Bikes",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    address: {
+      city: "Vancouver",
+      street: "123 Mud Lane",
+      postalCode: "V1V1V1",
+      country: "CA",
+      province: "BC",
+    },
+  },
+];
 
 const colors = ["Red", "Black", "White", "Blue", "Grey", "Yellow"];
 const models = ["Contend", "Propel", "Mountain", "Cypress", "Revolt"];
-const location = [
-  "Vancouver",
-  "Burnaby",
-  "Coquitlam",
-  "Port Moody",
-  "Port Coquitlam",
-  "Surrey",
-  "Langley",
-  "Abbotsford",
-  "Squamish",
-  "Whistler",
-  "Richmond",
-];
 
-const fakeBikes = fakeEntityArray(40, () => {
+const fakeBikes = fakeEntityArray(35, () => {
   return {
     id: v4(),
+    bikeLotId: randomizeTrait(fakeBikeLots).id,
     model: randomizeTrait(models),
     color: randomizeTrait(colors),
-    location: randomizeTrait(location),
+    available: true,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
@@ -89,4 +151,5 @@ module.exports = {
   fakeReservations,
   fakeReviews,
   fakeUsers,
+  fakeBikeLots,
 };

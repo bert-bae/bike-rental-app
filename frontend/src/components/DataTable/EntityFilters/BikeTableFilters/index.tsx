@@ -1,6 +1,5 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
@@ -10,9 +9,11 @@ import MultiSelect from "../../../../components/MultiSelect";
 import { modelList, colorList, ratingList } from "../../../../constants";
 
 export type BikeFilters = {
-  model: string[];
-  color: string[];
-  rating: string[];
+  model?: string[];
+  color?: string[];
+  rating?: string[];
+  lat?: string;
+  lng?: string;
 };
 
 type BikeTableFiltersProps = {
@@ -26,12 +27,12 @@ const BikeTableFilters: React.FC<BikeTableFiltersProps> = ({
 }) => {
   const [colors, setColors] = React.useState<string[]>([]);
   const [models, setModels] = React.useState<string[]>([]);
-  const [rating, setRating] = React.useState<number>(1);
+  const [rating, setRating] = React.useState<any>(null);
 
   const reset = () => {
     setColors([]);
     setModels([]);
-    setRating(1);
+    setRating(null);
 
     if (onReset) {
       onReset();
@@ -40,9 +41,6 @@ const BikeTableFilters: React.FC<BikeTableFiltersProps> = ({
 
   return (
     <Box>
-      <FormControl sx={{ m: 1 }}>
-        <TextField label="Location" type="text" />
-      </FormControl>
       <MultiSelect
         selectedItems={models}
         label="Models"
@@ -61,13 +59,18 @@ const BikeTableFilters: React.FC<BikeTableFiltersProps> = ({
         <InputLabel>Rating</InputLabel>
         <Select
           label="Rating"
+          value={rating as number}
           onChange={(e: any) => {
             e.preventDefault();
             setRating(e.target.value);
           }}
         >
           {ratingList.map((rating) => {
-            return <MenuItem value={rating.value}>{rating.label}</MenuItem>;
+            return (
+              <MenuItem key={rating.label} value={rating.value}>
+                {rating.label}
+              </MenuItem>
+            );
           })}
         </Select>
       </FormControl>

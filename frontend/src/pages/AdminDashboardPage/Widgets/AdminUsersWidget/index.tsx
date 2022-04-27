@@ -6,7 +6,7 @@ import UserForm from "../../../../components/EntityForms/UserForm";
 import WidgetWrapper from "../../../../components/WidgetWrapper";
 import userAdminUsersWidget from "./useAdminUsersWidget";
 
-const AdminBikesWidget: React.FC<{}> = ({}) => {
+const AdminBikesWidget: React.FC<any> = (props) => {
   const {
     userToEdit,
     users,

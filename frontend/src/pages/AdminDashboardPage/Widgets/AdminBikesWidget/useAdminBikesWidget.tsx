@@ -1,38 +1,56 @@
 import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Chip from "@mui/material/Chip";
 import {
   useCreateBikeMutation,
   useDeleteBikeMutation,
   useEditBikeMutation,
   useGetBikesQuery,
 } from "../../../../services/hooks/bikes";
-import { TBikeModel } from "../../../../types/entities.type";
+import { useGetBikeLotsQuery } from "../../../../services/hooks/bikeLots";
+import { TBikeLotsModel, TBikeModel } from "../../../../types/entities.type";
 import { BikeFilters } from "../../../../components/DataTable/EntityFilters/BikeTableFilters";
 import ReviewStars from "../../../../components/ReviewStars";
 
 const columns = [
   { key: "model", label: "Model" },
   { key: "color", label: "Color" },
-  { key: "location", label: "Location" },
+  {
+    key: "location",
+    label: "Location",
+    render: (location: TBikeLotsModel, row: any) => {
+      const address = location?.address;
+      return (
+        <Box>
+          <Typography variant="body1">{location?.lotName}</Typography>
+          <Typography variant="subtitle2">
+            {address?.street}, {address?.city}
+          </Typography>
+          <Typography variant="subtitle2">
+            {address?.province}, {address?.postalCode}, {address?.country}
+          </Typography>
+        </Box>
+      );
+    },
+  },
   {
     key: "rating",
     label: "Rating",
     render: (rating: string, row: any) => {
-      return (
-        <ReviewStars
-          size={16}
-          value={rating ? Math.round(Number(rating)) : 0}
-          readonly={true}
-        />
-      );
+      return Math.round(Number(rating));
     },
   },
   {
     key: "available",
     label: "Available",
-    render: (bike: TBikeModel) => {
-      return "Yes";
+    render: (available: boolean) => {
+      return available ? (
+        <Chip label="Available" color="success" variant="outlined" />
+      ) : (
+        <Chip label="Not Available" color="warning" variant="outlined" />
+      );
     },
   },
 ];
@@ -41,6 +59,7 @@ const useAdminBikesWidget = () => {
   const [bikeToEdit, setBikeToEdit] = React.useState<TBikeModel | void>();
   const [filters, setFilters] = React.useState<BikeFilters>();
   const { data: bikes } = useGetBikesQuery(filters);
+  const { data: bikeLots } = useGetBikeLotsQuery();
   const { mutate: createBike, isSuccess: createSuccess } =
     useCreateBikeMutation();
   const { mutate: editBike, isSuccess: editSuccess } = useEditBikeMutation();
@@ -63,7 +82,8 @@ const useAdminBikesWidget = () => {
     const data = {
       model: formData.get("model"),
       color: formData.get("color"),
-      location: formData.get("location"),
+      bikeLotId: formData.get("bikeLotId"),
+      available: formData.get("available") === "on",
     };
 
     const id = formData.get("id");
@@ -86,10 +106,10 @@ const useAdminBikesWidget = () => {
     setFilters(undefined);
   };
 
-  const resetForm = () => {
+  const resetForm = React.useCallback(() => {
     toggleForm(false);
     setBikeToEdit(undefined);
-  };
+  }, [setBikeToEdit]);
 
   const actionColumn = {
     key: "actions",
@@ -124,11 +144,12 @@ const useAdminBikesWidget = () => {
     if (createSuccess || editSuccess || deleteSuccess) {
       resetForm();
     }
-  }, [createSuccess, editSuccess, deleteSuccess]);
+  }, [createSuccess, editSuccess, deleteSuccess, resetForm]);
 
   return {
     bikeToEdit,
     bikes: bikes || [],
+    bikeLots: bikeLots || [],
     formVisible,
     columns: [...columns, actionColumn],
     toggleForm,

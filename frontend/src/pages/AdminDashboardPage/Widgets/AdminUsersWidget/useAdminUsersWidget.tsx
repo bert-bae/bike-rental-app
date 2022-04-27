@@ -46,10 +46,10 @@ const useAdminUsersWidget = () => {
     deleteUser(user.id);
   };
 
-  const resetForm = () => {
+  const resetForm = React.useCallback(() => {
     toggleForm(false);
     setUserToEdit(undefined);
-  };
+  }, [setUserToEdit]);
 
   const actionColumn = {
     key: "actions",
@@ -84,7 +84,7 @@ const useAdminUsersWidget = () => {
     if (createSuccess || editSuccess || deleteSuccess) {
       resetForm();
     }
-  }, [createSuccess, editSuccess, deleteSuccess]);
+  }, [createSuccess, editSuccess, deleteSuccess, resetForm]);
 
   return {
     userToEdit,

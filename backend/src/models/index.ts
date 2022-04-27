@@ -3,21 +3,23 @@ import Bikes from "./bikes";
 import Users from "./users";
 import BikeReviews from "./bikereviews";
 import Reservations from "./reservations";
+import BikeLots from "./bikelots";
 
 const env = process.env.NODE_ENV || "development";
 const config = require(__dirname + "/../../config/config.json")[env];
 
-const sequelizeConnection = new Sequelize(
+const sequelize = new Sequelize(
   config.database,
   config.username,
   config.password,
   { ...config, operatorsAliases: true }
 );
 
-const BikesModel = Bikes(sequelizeConnection);
-const UsersModel = Users(sequelizeConnection);
-const BikeReviewsModel = BikeReviews(sequelizeConnection);
-const ReservationsModel = Reservations(sequelizeConnection);
+const BikesModel = Bikes(sequelize);
+const BikeLotsModel = BikeLots(sequelize);
+const UsersModel = Users(sequelize);
+const BikeReviewsModel = BikeReviews(sequelize);
+const ReservationsModel = Reservations(sequelize);
 
 BikesModel.hasMany(ReservationsModel, {
   sourceKey: "id",
@@ -30,13 +32,23 @@ ReservationsModel.belongsTo(BikesModel, {
   onDelete: "CASCADE",
 });
 
+BikeLotsModel.hasMany(BikesModel, {
+  sourceKey: "id",
+  foreignKey: "bikeLotId",
+  as: "bikes",
+});
+BikesModel.belongsTo(BikeLotsModel, {
+  foreignKey: "bikeLotId",
+  as: "location",
+});
+
 UsersModel.hasMany(ReservationsModel, {
   sourceKey: "id",
   foreignKey: "userId",
   as: "reservations",
 });
 ReservationsModel.belongsTo(UsersModel, {
-  foreignKey: "bikeId",
+  foreignKey: "userId",
   as: "user",
   onDelete: "CASCADE",
 });
@@ -62,4 +74,11 @@ BikeReviewsModel.belongsTo(BikesModel, {
   onDelete: "CASCADE",
 });
 
-export { BikesModel, UsersModel, BikeReviewsModel, ReservationsModel };
+export {
+  sequelize,
+  BikesModel,
+  UsersModel,
+  BikeReviewsModel,
+  ReservationsModel,
+  BikeLotsModel,
+};

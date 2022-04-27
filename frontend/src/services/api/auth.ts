@@ -1,5 +1,6 @@
 import { UserRoleEnum } from "../../types/entities.type";
 import client from "./baseClient";
+/* eslint-disable */
 
 export type LoginResponse = {
   role: UserRoleEnum;

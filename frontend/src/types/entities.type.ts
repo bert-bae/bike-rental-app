@@ -7,10 +7,13 @@ export type TBikeReviewModel = {
 
 export type TBikeModel = {
   id: string;
+  bikeLotId: string;
   model: string;
   color: string;
-  location: string;
   rating: number;
+  available: boolean;
+} & {
+  location?: TBikeLotsModel;
 };
 
 export enum UserRoleEnum {
@@ -38,4 +41,14 @@ export type TReservationModel = {
   startTime: string;
   endTime: string;
   status: ReservationStatusEnum;
+};
+
+export type TBikeLotsModel = {
+  id: string;
+  lotName: string;
+  address: Record<string, any>;
+  geom: {
+    type: "Point";
+    coordinates: [string, string];
+  };
 };

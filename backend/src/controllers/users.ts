@@ -1,24 +1,29 @@
-import { Router } from "express";
+import { Request, Response, NextFunction } from "express";
 import { userService, authService } from "../services";
 import { TUserModel, UserRoleEnum } from "../models/model.type";
-import { authorizeRole, authorizeUser } from "./middlewares/auth";
 
-const router = Router();
-
-router.post("/", async (req, res) => {
+const createUser = async (req: Request, res: Response, next: NextFunction) => {
   const body = req.body as TUserModel;
+  const user = (req as any).user as TUserModel;
 
   try {
+    if (user.role !== UserRoleEnum.Admin && body.role === UserRoleEnum.Admin) {
+      (req as any).error = {
+        status: 403,
+        message: "User does not have permission to create admin users.",
+      };
+      return next();
+    }
+
     const newUser = await userService.create(body);
     res.status(200).json(newUser);
   } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+    (req as any).error = error;
+    next();
   }
-});
+};
 
-router.post("/login", async (req, res) => {
+const login = async (req: Request, res: Response, next: NextFunction) => {
   const { username, password } = req.body as Pick<
     TUserModel,
     "username" | "password"
@@ -28,60 +33,61 @@ router.post("/login", async (req, res) => {
     const token = await authService.login(username, password);
     res.status(200).json(token);
   } catch (error: any) {
-    res.status(500).json({
-      error: error.message,
-    });
+    (req as any).error = error;
+    next();
   }
-});
+};
 
-router
-  .use(authorizeUser)
-  .use(authorizeRole(UserRoleEnum.Admin))
-  .get("/", async (req, res) => {
-    try {
-      const users = await userService.findAllBy();
-      res.status(200).json(users);
-    } catch (error: any) {
-      res.status(500).json({
-        error: error.message,
-      });
+// Admin specific controllers
+const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const users = await userService.findAllBy();
+    res.status(200).json(users);
+  } catch (error: any) {
+    (req as any).error = error;
+    next();
+  }
+};
+
+const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+  const body = req.body as TUserModel;
+
+  try {
+    const updateFields: Partial<
+      Pick<TUserModel, "name" | "password" | "role">
+    > = {
+      name: body.name,
+      role: body.role,
+    };
+
+    if (body.password) {
+      updateFields.password = body.password;
     }
-  })
-  .put("/:userId", async (req, res) => {
-    const body = req.body as TUserModel;
 
-    try {
-      const updateFields: Partial<
-        Pick<TUserModel, "name" | "password" | "role">
-      > = {
-        name: body.name,
-        role: body.role,
-      };
+    const newUser = await userService.updateById(
+      req.params.userId,
+      updateFields
+    );
+    res.status(200).json(newUser);
+  } catch (error: any) {
+    (req as any).error = error;
+    next();
+  }
+};
+const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await userService.destroy(req.params.userId);
+    res.status(200).send();
+  } catch (error: any) {
+    (req as any).error = error;
+    next();
+  }
+};
 
-      if (body.password) {
-        updateFields.password = body.password;
-      }
-
-      const newUser = await userService.updateById(
-        req.params.userId,
-        updateFields
-      );
-      res.status(200).json(newUser);
-    } catch (error: any) {
-      res.status(500).json({
-        error: error.message,
-      });
-    }
-  })
-  .delete("/:userId", async (req, res) => {
-    try {
-      await userService.destroy(req.params.userId);
-      res.status(200).send();
-    } catch (error: any) {
-      res.status(500).json({
-        error: error.message,
-      });
-    }
-  });
-
-export default router;
+export default {
+  createUser,
+  login,
+  getAllUsers,
+  updateUser,
+  deleteUser,
+};
