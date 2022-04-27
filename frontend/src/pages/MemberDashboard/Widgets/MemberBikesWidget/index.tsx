@@ -45,7 +45,11 @@ const MemberBikesWidget: React.FC<any> = (props) => {
           onLocationChange={onLocationChange}
         />
       </Box>
-      <BikeTableFilters onSearch={onSearch} onReset={onSearchReset} />
+      <BikeTableFilters
+        dateSearchable
+        onSearch={onSearch}
+        onReset={onSearchReset}
+      />
       <DataTable title="Bikes" columns={columns as any} rows={bikes} />
     </WidgetWrapper>
   );

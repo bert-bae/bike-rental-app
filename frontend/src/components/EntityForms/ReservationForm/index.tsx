@@ -20,7 +20,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   onSubmit,
   onCancel,
 }) => {
-  const { data } = useGetBikeQuery(bike.id);
+  const { data } = useGetBikeQuery(bike?.id);
   const [start, setStart] = React.useState<any>();
   const [end, setEnd] = React.useState<any>();
 

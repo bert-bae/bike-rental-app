@@ -17,7 +17,6 @@ import {
   TBikeReviewModel,
   TReservationModel,
 } from "../../../../types/entities.type";
-import ReviewStars from "../../../../components/ReviewStars";
 
 const columns = [
   {
@@ -150,7 +149,9 @@ const useMemberReservationsWidget = () => {
       key: "bike",
       label: "Rating",
       render: (value: BikeWithReviews, row: any) => {
-        if (row.status === ReservationStatusEnum.Cancelled) {
+        const endTime = new Date(row.endTime).getTime();
+        const now = new Date().getTime();
+        if (row.status === ReservationStatusEnum.Cancelled || endTime > now) {
           return <Box> - </Box>;
         }
 

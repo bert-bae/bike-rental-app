@@ -1,5 +1,6 @@
 import { Sequelize, Op } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
+import { isEmpty } from "lodash";
 import { Request, Response, NextFunction } from "express";
 import {
   bikeService,
@@ -21,11 +22,13 @@ const buildBikeFilters = (filters?: {
   rating: string;
   lat: string;
   lng: string;
+  availableFrom: string;
 }) => {
   const operation: Record<string, any> = {
     where: {},
     having: {},
     location: {},
+    reservationWhere: {},
   };
 
   if (!filters) {
@@ -34,6 +37,9 @@ const buildBikeFilters = (filters?: {
 
   if (filters.color) {
     operation.where.color = { [Op.in]: filters.color.split(",") || [] };
+  }
+  if (filters.model) {
+    operation.where.model = { [Op.in]: filters.model.split(",") || [] };
   }
   if (filters.model) {
     operation.where.model = { [Op.in]: filters.model.split(",") || [] };
@@ -47,6 +53,15 @@ const buildBikeFilters = (filters?: {
     operation.location = {
       lat: filters.lat,
       lng: filters.lng,
+    };
+  }
+
+  if (filters.availableFrom) {
+    operation.reservationWhere.startTime = {
+      [Op.lt]: filters.availableFrom,
+    };
+    operation.reservationWhere.endTime = {
+      [Op.gt]: filters.availableFrom,
     };
   }
 
@@ -89,7 +104,6 @@ const getBikesForAdmin = async (
         [Sequelize.fn("coalesce", Sequelize.literal("rating, 0")), "DESC"],
       ],
     });
-
     res.status(200).send(bikes);
   } catch (error) {
     (req as any).error = error;
@@ -102,12 +116,12 @@ const getBikesForMembers = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { where, having, location } = buildBikeFilters(req.query as any);
+  const { where, having, location, reservationWhere } = buildBikeFilters(
+    req.query as any
+  );
 
   try {
     const bikes = await bikeService.findAllBy({
-      where,
-      having,
       replacements: [location.lat, location.lng],
       attributes: [
         "id",
@@ -116,6 +130,8 @@ const getBikesForMembers = async (
         "available",
         [Sequelize.fn("AVG", Sequelize.col("reviews.rating")), "rating"],
       ],
+      where: { ...where, available: true },
+      having,
       include: [
         {
           model: BikeReviewsModel,
@@ -132,14 +148,24 @@ const getBikesForMembers = async (
             )
           ),
         },
+        {
+          required: false,
+          model: ReservationsModel,
+          as: "reservations",
+          attributes: ["id"],
+          where: !isEmpty(reservationWhere) ? reservationWhere : undefined,
+        },
       ],
-      group: ["Bikes.id", "rating", "location.id"],
+      group: ["Bikes.id", "rating", "location.id", "reservations.id"],
       order: [
         [Sequelize.fn("coalesce", Sequelize.literal("rating, 0")), "DESC"],
       ],
     });
 
-    res.status(200).send(bikes);
+    const availableBikes = bikes.filter(
+      (bike) => (bike as any).reservations.length === 0
+    );
+    res.status(200).send(availableBikes);
   } catch (error) {
     (req as any).error = error;
     next();
@@ -228,7 +254,6 @@ const createBikeReservation = async (
     res.status(200).send(reservation);
   } catch (error) {
     (req as any).error = error;
-    console.log(error);
     next();
   }
 };
@@ -328,7 +353,7 @@ const updateBikeReview = async (
 const createBike = async (req: Request, res: Response, next: NextFunction) => {
   const body: TBikeModel = req.body;
   try {
-    const bike = await bikeService.create(body);
+    const bike = await bikeService.create({ ...body, id: uuidv4() });
     res.status(200).send(bike);
   } catch (error) {
     (req as any).error = error;

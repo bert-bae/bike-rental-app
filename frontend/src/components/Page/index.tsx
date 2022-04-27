@@ -12,7 +12,6 @@ const Page: PageProps = ({ pageTitle, children }) => {
   return (
     <React.Fragment>
       <NavigationBar
-        loggedIn={false}
         onLogin={(e: React.MouseEvent<HTMLButtonElement>) => navigate("/login")}
         onLogout={(e: React.MouseEvent<HTMLButtonElement>) =>
           navigate("/login")

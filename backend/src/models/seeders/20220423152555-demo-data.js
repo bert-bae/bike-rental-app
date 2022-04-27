@@ -16,9 +16,9 @@ module.exports = {
       {},
       { address: { type: new Sequelize.JSON() } }
     );
-    await queryInterface.bulkInsert("Bikes", fakeBikes, {});
-    await queryInterface.bulkInsert("Reservations", fakeReservations, {});
-    await queryInterface.bulkInsert("BikeReviews", fakeReviews, {});
+    // await queryInterface.bulkInsert("Bikes", fakeBikes, {});
+    // await queryInterface.bulkInsert("Reservations", fakeReservations, {});
+    // await queryInterface.bulkInsert("BikeReviews", fakeReviews, {});
   },
 
   async down(queryInterface, Sequelize) {

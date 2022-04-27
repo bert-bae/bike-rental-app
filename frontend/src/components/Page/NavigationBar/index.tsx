@@ -1,4 +1,6 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -6,9 +8,9 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import styled from "@emotion/styled";
+import { TStoreModel } from "../../../redux";
 
 type NavigationBarProps = {
-  loggedIn: boolean;
   onMenuClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onLogin: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onLogout: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -25,11 +27,13 @@ const StyledNavItem = styled(Button)({
 });
 
 const NavigationBar: React.FC<NavigationBarProps> = ({
-  loggedIn,
   onMenuClick,
   onLogin,
   onLogout,
 }) => {
+  const { userId } = useSelector((state: TStoreModel) => state.auth);
+  const navigate = useNavigate();
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -37,22 +41,19 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             TakeAndRide
           </Typography>
-          {loggedIn ? (
-            <Button color="inherit" onClick={onLogin}>
-              Login
-            </Button>
-          ) : (
+          {!userId ? (
             <>
-              <StyledNavItem variant="text">
-                <Link to="/admin">Admin</Link>
-              </StyledNavItem>
-              <StyledNavItem variant="text">
-                <Link to="/">Members</Link>
-              </StyledNavItem>
-              <StyledNavItem variant="text" onClick={onLogout}>
-                Logout
-              </StyledNavItem>
+              <Button color="inherit" onClick={() => navigate("/login")}>
+                Login
+              </Button>
+              <Button color="inherit" onClick={() => navigate("/register")}>
+                Register
+              </Button>
             </>
+          ) : (
+            <StyledNavItem variant="text" onClick={onLogout}>
+              Logout
+            </StyledNavItem>
           )}
         </Toolbar>
       </AppBar>

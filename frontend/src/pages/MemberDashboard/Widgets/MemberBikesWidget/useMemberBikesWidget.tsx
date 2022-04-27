@@ -5,7 +5,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import { BikeFilters } from "../../../../components/DataTable/EntityFilters/BikeTableFilters";
-import ReviewStars from "../../../../components/ReviewStars";
 import { MapMarkerType } from "../../../../components/MapWrapper";
 import { useGetReservableBikesQuery } from "../../../../services/hooks/bikes";
 import { useCreateReservationMutation } from "../../../../services/hooks/reservations";
@@ -119,7 +118,11 @@ const useMemberBikesWidget = () => {
   };
 
   const handleSearchReset = () => {
-    setFilters((prev) => ({ lat: prev.lat, lng: prev.lng }));
+    setFilters((prev) => ({
+      lat: prev.lat,
+      lng: prev.lng,
+      availableFrom: prev.availableFrom,
+    }));
   };
 
   const actionColumn = {

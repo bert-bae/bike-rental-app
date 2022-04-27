@@ -7,7 +7,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
   const user = (req as any).user as TUserModel;
 
   try {
-    if (user.role !== UserRoleEnum.Admin && body.role === UserRoleEnum.Admin) {
+    if (user?.role !== UserRoleEnum.Admin && body.role === UserRoleEnum.Admin) {
       (req as any).error = {
         status: 403,
         message: "User does not have permission to create admin users.",
