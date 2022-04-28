@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
 import reservationsApi from "../api/reservations";
 import adminReservationsApi from "../api/admin/reservations";
+import notify from "../../utils/notify";
 /* eslint-disable */
 
 export const useGetBikeReservations = () => {
@@ -43,8 +44,17 @@ export const useCreateReservationMutation = () => {
   };
 
   return useMutation(reserveBike, {
-    onError: () => {},
+    onError: () => {
+      notify("danger", {
+        title: "Error",
+        message: "Reservation could not be created",
+      });
+    },
     onSuccess: () => {
+      notify("success", {
+        title: "Success",
+        message: "Reservation created successfully",
+      });
       queryClient.invalidateQueries("readReservations");
     },
   });
@@ -62,8 +72,17 @@ export const useUpdateReservationMutation = () => {
   };
 
   return useMutation(updateReservation, {
-    onError: () => {},
+    onError: () => {
+      notify("danger", {
+        title: "Error",
+        message: "Reservation could not be updated",
+      });
+    },
     onSuccess: () => {
+      notify("success", {
+        title: "Success",
+        message: "Reservation updated successfully",
+      });
       queryClient.invalidateQueries("readReservations");
     },
   });

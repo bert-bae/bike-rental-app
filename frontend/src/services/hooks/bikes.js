@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
 import bikesApi from "../api/bikes";
 import adminBikesApi from "../api/admin/bikes";
+import notify from "../../utils/notify";
 
 /* eslint-disable */
 
@@ -66,8 +67,17 @@ export const useCreateBikeMutation = () => {
   };
 
   return useMutation(create, {
-    onError: () => {},
+    onError: () => {
+      notify("danger", {
+        title: "Error",
+        message: "Bike could not be created",
+      });
+    },
     onSuccess: ({ data }) => {
+      notify("success", {
+        title: "Success",
+        message: "Bike created successfully",
+      });
       queryClient.invalidateQueries("readBikes");
     },
   });
@@ -85,8 +95,17 @@ export const useEditBikeMutation = () => {
   };
 
   return useMutation(edit, {
-    onError: () => {},
+    onError: () => {
+      notify("danger", {
+        title: "Error",
+        message: "Bike could not be updated",
+      });
+    },
     onSuccess: () => {
+      notify("success", {
+        title: "Success",
+        message: "Bike updated successfully",
+      });
       queryClient.invalidateQueries("readBikes");
     },
   });
@@ -103,8 +122,17 @@ export const useDeleteBikeMutation = () => {
   };
 
   return useMutation(destroyBike, {
-    onError: () => {},
+    onError: () => {
+      notify("danger", {
+        title: "Error",
+        message: "Bike could not be deleted",
+      });
+    },
     onSuccess: () => {
+      notify("success", {
+        title: "Success",
+        message: "Bike deleted successfully",
+      });
       queryClient.invalidateQueries("readBikes");
     },
   });

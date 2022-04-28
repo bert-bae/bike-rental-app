@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
+import { ReactNotifications } from "react-notifications-component";
 import Router from "./Router";
 import store from "./redux";
 import "./App.css";
@@ -18,6 +19,7 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <ReactNotifications />
       <Provider store={store}>
         <BrowserRouter>
           <Router />

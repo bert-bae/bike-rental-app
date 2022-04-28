@@ -9,6 +9,7 @@ import Box from "@mui/material/Box";
 import DatePicker from "../../DatePicker";
 import { useGetBikeQuery } from "../../../services/hooks/bikes";
 import { TBikeModel, TReservationModel } from "../../../types/entities.type";
+import notify from "../../../utils/notify";
 
 type ReservationFormProps = {
   bike: TBikeModel;
@@ -22,8 +23,7 @@ const UnavailableDateTime: React.FC<{
 }> = ({ startTime, endTime }) => {
   const start = dateFns.format(startTime, "Pp");
   const end = dateFns.format(endTime, "Pp");
-  console.log(start);
-  console.log(end);
+
   return (
     <Box key={startTime.getTime().toString()} style={{ padding: "3px 0" }}>
       <Chip label={`${start} - ${end}`} color="error" />
@@ -48,21 +48,25 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
   };
 
   const validateTimeSelection = React.useCallback(() => {
-    const unavailable = unavailableTimes.some(({ startTime, endTime }) => {
+    if (!unavailableTimes.length) {
+      return true;
+    }
+
+    for (const { startTime, endTime } of unavailableTimes) {
       const unavailStartMs = startTime.getTime();
       const pickedStartMs = start.getTime();
       const unavailEndMs = endTime.getTime();
       const pickedEndMs = end.getTime();
 
-      if (unavailStartMs > pickedStartMs && unavailStartMs > pickedEndMs) {
-        return true;
-      }
+      if (unavailStartMs <= pickedStartMs && pickedStartMs <= unavailEndMs)
+        return false;
+      if (unavailStartMs <= pickedEndMs && pickedEndMs <= unavailEndMs)
+        return false;
+      if (pickedStartMs < unavailStartMs && unavailEndMs < pickedEndMs)
+        return false;
+    }
 
-      if (unavailEndMs < pickedStartMs && unavailEndMs > pickedEndMs) {
-        return true;
-      }
-    });
-    return !unavailable;
+    return true;
   }, [unavailableTimes, start, end]);
 
   React.useEffect(() => {
@@ -73,7 +77,10 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
 
     const sanitizedReservationSlots = reservations.map((reservation) => {
       let endTime = new Date(reservation.endTime);
-      endTime = dateFns.setHours(endTime, endTime.getHours() + 1);
+      console.log(dateFns.getMinutes(endTime));
+      if (dateFns.getMinutes(endTime) !== 0) {
+        endTime = dateFns.setHours(endTime, endTime.getHours() + 1);
+      }
       endTime = dateFns.setMinutes(endTime, 0);
       return {
         startTime: dateFns.setMinutes(new Date(reservation.startTime), 0),
@@ -90,7 +97,10 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!validateTimeSelection()) {
-          alert("Cannot choose time");
+          notify("warning", {
+            title: "Conflict",
+            message: "The chosen timeframe conflicts with another reservation",
+          });
           return;
         }
         onSubmit({

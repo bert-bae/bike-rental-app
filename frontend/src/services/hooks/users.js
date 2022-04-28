@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
 import usersApi from "../api/users";
 import adminUsersApi from "../api/admin/users";
+import notify from "../../utils/notify";
 /* eslint-disable */
 
 export const useGetUsersQuery = () => {
@@ -28,6 +29,10 @@ export const useCreateUserMutation = () => {
   return useMutation(create, {
     onError: () => {},
     onSuccess: (data) => {
+      notify("success", {
+        title: "Success",
+        message: "User created successfully",
+      });
       queryClient.invalidateQueries("readUsers");
     },
   });
@@ -47,6 +52,10 @@ export const useEditUserMutation = () => {
   return useMutation(edit, {
     onError: () => {},
     onSuccess: () => {
+      notify("success", {
+        title: "Success",
+        message: "User updated successfully",
+      });
       queryClient.invalidateQueries("readUsers");
     },
   });
@@ -65,6 +74,10 @@ export const useDeleteUserMutation = () => {
   return useMutation(destroyBike, {
     onError: () => {},
     onSuccess: () => {
+      notify("success", {
+        title: "Success",
+        message: "User deleted successfully",
+      });
       queryClient.invalidateQueries("readUsers");
     },
   });

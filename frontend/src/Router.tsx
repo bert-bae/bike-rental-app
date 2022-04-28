@@ -1,6 +1,6 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import MemberDashboardPage from "./pages/MemberDashboard";
 import LoginPage from "./pages/LoginPage";
@@ -8,11 +8,28 @@ import RegistrationPage from "./pages/RegistrationPage";
 import { TStoreModel } from "./redux";
 
 import "./App.css";
+import { UserRoleEnum } from "./types/entities.type";
 
 const Router = () => {
-  const { userId } = useSelector((state: TStoreModel) => state.auth);
-  const navigate = useNavigate();
-  // TODO: redirections based on url path
+  const { jwt, role } = useSelector((state: TStoreModel) => state.auth);
+  const { pathname } = useLocation();
+
+  if (!jwt) {
+    if (pathname === "/admin") {
+      return <Navigate to="/login" />;
+    }
+    if (pathname === "/") {
+      return <Navigate to="/login" />;
+    }
+  }
+
+  if (!jwt && role === UserRoleEnum.Member && pathname === "/admin") {
+    return <Navigate to="/" />;
+  }
+
+  if ((jwt && pathname === "/login") || (jwt && pathname === "/register")) {
+    return <Navigate to={role === UserRoleEnum.Admin ? "/admin" : "/"} />;
+  }
 
   return (
     <Routes>

@@ -1,8 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router";
+import { Typography } from "@mui/material";
 import PageWrapper from "./PageWrapper";
 import NavigationBar from "./NavigationBar";
-import { Typography } from "@mui/material";
+import "react-notifications-component/dist/theme.css";
 
 type PageProps = React.FC<{ children: any; pageTitle?: string }>;
 

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
 import bikeReviewsApi from "../api/bikeReviews";
+import notify from "../../utils/notify";
 /* eslint-disable */
 
 export const useGetReviews = () => {
@@ -28,8 +29,17 @@ export const useCreateReviewMutation = () => {
   };
 
   return useMutation(reviewBike, {
-    onError: () => {},
+    onError: () => {
+      notify("danger", {
+        title: "Error",
+        message: "Review could not be created",
+      });
+    },
     onSuccess: () => {
+      notify("success", {
+        title: "Success",
+        message: "Review created successfully",
+      });
       queryClient.invalidateQueries("readReservations");
     },
   });
@@ -47,8 +57,17 @@ export const useUpdateReviewMutation = () => {
   };
 
   return useMutation(updateReview, {
-    onError: () => {},
+    onError: () => {
+      notify("danger", {
+        title: "Error",
+        message: "Review could not be updated",
+      });
+    },
     onSuccess: () => {
+      notify("success", {
+        title: "Success",
+        message: "Review updated successfully",
+      });
       queryClient.invalidateQueries("readReservations");
     },
   });
