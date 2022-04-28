@@ -2,8 +2,7 @@ import React from "react";
 import Map, { Marker, GeolocateControl } from "react-map-gl";
 import * as mapboxgl from "mapbox-gl";
 import { Box } from "@mui/material";
-// import Geocoder from "react-map-gl-geocoder";
-// import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
+import GeoSearch from "../GeoSearch";
 /* eslint import/no-webpack-loader-syntax: off */
 (mapboxgl as any).workerClass =
   require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
@@ -15,28 +14,53 @@ export type MapMarkerType = {
 };
 
 type MapWrapperProps = {
+  lat: number;
+  lng: number;
   markers?: MapMarkerType[];
   onLocationChange?: (lat: number, lng: number) => void;
 };
 
 const MapWrapper: React.FC<MapWrapperProps> = ({
+  lat,
+  lng,
   markers,
   onLocationChange,
 }) => {
   const [viewState, setViewState] = React.useState({
-    latitude: 49.24589,
-    longitude: -123.003309,
+    latitude: lat, //49.24589,
+    longitude: lng, //-123.003309,
     zoom: 10,
   });
   const mapRef = React.useRef();
+
+  const handleSearchSelect = (input: { lat: number; lng: number }) => {
+    setViewState((prev) => ({
+      ...prev,
+      latitude: input.lat,
+      longitude: input.lng,
+    }));
+  };
 
   React.useEffect(() => {
     onLocationChange &&
       onLocationChange(viewState.latitude, viewState.longitude);
   }, [viewState, onLocationChange]);
 
+  React.useEffect(() => {
+    setViewState((prev) => ({ ...prev, latitude: lat, longitude: lng }));
+  }, [lat, lng]);
+
   return (
     <Box position="relative">
+      <Box
+        position="absolute"
+        top="8px"
+        right="50px"
+        zIndex="1000"
+        style={{ backgroundColor: "#FFF" }}
+      >
+        <GeoSearch placeholder="Search" onSelect={handleSearchSelect} />
+      </Box>
       <Map
         ref={mapRef.current}
         {...viewState}
@@ -48,12 +72,6 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
         mapStyle="mapbox://styles/mapbox/streets-v11"
         attributionControl={false}
       >
-        {/* <Geocoder
-          mapRef={mapRef.current}
-          onViewportChange={(e: any) => console.log(e)}
-          mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_PK}
-          position="top-right"
-        /> */}
         <GeolocateControl />
         {markers &&
           markers.map((marker) => (
@@ -66,7 +84,6 @@ const MapWrapper: React.FC<MapWrapperProps> = ({
               onClick={() => console.log("clicked")}
             />
           ))}
-        {/* {locations && <Source type="geojson" data={[]}></Source>} */}
       </Map>
     </Box>
   );

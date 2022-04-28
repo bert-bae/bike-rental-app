@@ -41,6 +41,8 @@ const MemberBikesWidget: React.FC<any> = (props) => {
       </DrawerForm>
       <Box sx={{ mb: 2 }}>
         <MapWrapper
+          lat={49.24589}
+          lng={-123.003309}
           markers={bikeLotMarkers}
           onLocationChange={onLocationChange}
         />

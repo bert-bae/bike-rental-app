@@ -114,13 +114,15 @@ const fakeUsers = userNames.map((username, i) => {
   };
 });
 
-const fakeReservations = fakeEntityArray(100, () => {
+const now = new Date();
+const addHour = now.setHours(now.getHours() + 1);
+const fakeReservations = fakeEntityArray(10, () => {
   return {
     id: v4(),
     userId: randomizeTrait(fakeUsers).id,
     bikeId: randomizeTrait(fakeBikes).id,
-    startTime: new Date().toISOString(),
-    endTime: new Date().toISOString(),
+    startTime: new Date(),
+    endTime: new Date(addHour),
     status: "Active",
     createdAt: new Date(),
     updatedAt: new Date(),
