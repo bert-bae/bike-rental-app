@@ -12,7 +12,6 @@ import {
 import { useGetBikeLotsQuery } from "../../../../services/hooks/bikeLots";
 import { TBikeLotsModel, TBikeModel } from "../../../../types/entities.type";
 import { BikeFilters } from "../../../../components/DataTable/EntityFilters/BikeTableFilters";
-import ReviewStars from "../../../../components/ReviewStars";
 
 const columns = [
   { key: "model", label: "Model" },

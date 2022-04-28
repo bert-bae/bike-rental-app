@@ -1,5 +1,6 @@
-import { Router, Request, Response, NextFunction } from "express";
-import { bikeReviewsService, reservationService } from "../services";
+import { Request, Response, NextFunction } from "express";
+import { Op } from "sequelize";
+import { reservationService } from "../services";
 import {
   BikeLotsModel,
   BikeReviewsModel,
@@ -14,6 +15,7 @@ const getReservationsForAdmin = async (
   next: NextFunction
 ) => {
   const user: TUserModel = (req as any).user;
+  const query = req.query as any;
   try {
     const reservations = await reservationService.findAllBy({
       include: [
@@ -40,6 +42,22 @@ const getReservationsForAdmin = async (
           model: UsersModel,
           as: "user",
           attributes: ["username", "name", "id"],
+          where: query.q
+            ? {
+                [Op.or]: [
+                  {
+                    username: {
+                      [Op.like]: `%${query.q}%`,
+                    },
+                  },
+                  {
+                    name: {
+                      [Op.like]: `%${query.q}%`,
+                    },
+                  },
+                ],
+              }
+            : undefined,
         },
       ],
       order: [["startTime", "desc"]],

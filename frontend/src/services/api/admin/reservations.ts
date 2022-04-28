@@ -8,10 +8,11 @@ type TReservations = {
 } & TReservationModel;
 
 const read = async (input: {
+  search: string;
   headers: { Authorization: string };
 }): Promise<Array<TReservations>> => {
   const reservations: AxiosResponse<Array<TReservations>> = await client.get(
-    "/admin/reservations",
+    `/admin/reservations?q=${input.search}`,
     {
       headers: input.headers,
     }

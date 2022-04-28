@@ -1,3 +1,4 @@
+import React from "react";
 import * as dateFns from "date-fns";
 import Chip from "@mui/material/Chip";
 import Box from "@mui/material/Box";
@@ -114,10 +115,13 @@ const columns = [
 ];
 
 const useMemberReservationsWidget = () => {
-  const { data: reservations } = useGetAllReservations();
+  const [search, setSearch] = React.useState<string>("");
+  const { data: reservations } = useGetAllReservations(search);
   return {
     reservations: reservations || [],
     columns: columns,
+    onSearch: (val: string) => setSearch(val),
+    onReset: () => setSearch(""),
   };
 };
 export default useMemberReservationsWidget;

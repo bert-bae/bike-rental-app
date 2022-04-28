@@ -88,16 +88,21 @@ export const useUpdateReservationMutation = () => {
   });
 };
 
-export const useGetAllReservations = () => {
+export const useGetAllReservations = (search) => {
   const { jwt } = useSelector((state) => state.auth);
-  const readBikes = async () => {
-    return adminReservationsApi.read({ headers: { Authorization: jwt } });
+  const readBikes = async ({ queryKey }) => {
+    const [_key, search] = queryKey;
+    return adminReservationsApi.read({
+      search,
+      headers: { Authorization: jwt },
+    });
   };
 
   return useQuery({
     queryFn: readBikes,
-    queryKey: ["readReservations"],
+    queryKey: ["readReservations", search],
     onError: () => {},
     onSuccess: () => {},
+    keepPreviousData: true,
   });
 };

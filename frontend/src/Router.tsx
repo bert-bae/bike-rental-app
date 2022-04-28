@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
-import MemberDashboardPage from "./pages/MemberDashboard";
+import MemberDashboardPage from "./pages/MemberDashboardPage";
 import LoginPage from "./pages/LoginPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import { TStoreModel } from "./redux";
