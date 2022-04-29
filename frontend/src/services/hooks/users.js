@@ -19,6 +19,28 @@ export const useGetUsersQuery = () => {
   });
 };
 
+export const useAdminCreateUserMutation = () => {
+  const queryClient = useQueryClient();
+  const { jwt } = useSelector((state) => state.auth);
+  const create = async (user) => {
+    return adminUsersApi.create({
+      body: user,
+      headers: { Authorization: jwt },
+    });
+  };
+
+  return useMutation(create, {
+    onError: () => {},
+    onSuccess: (data) => {
+      notify("success", {
+        title: "Success",
+        message: "User created successfully",
+      });
+      queryClient.invalidateQueries("readUsers");
+    },
+  });
+};
+
 export const useCreateUserMutation = () => {
   const queryClient = useQueryClient();
   const { jwt } = useSelector((state) => state.auth);
@@ -31,7 +53,7 @@ export const useCreateUserMutation = () => {
     onSuccess: (data) => {
       notify("success", {
         title: "Success",
-        message: "User created successfully",
+        message: "User created successfully. Login to continue.",
       });
       queryClient.invalidateQueries("readUsers");
     },

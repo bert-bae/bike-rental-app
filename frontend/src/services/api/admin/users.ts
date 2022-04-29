@@ -3,6 +3,20 @@ import { TUserModel } from "../../../types/entities.type";
 import client from "../baseClient";
 /* eslint-disable */
 
+const create = async (input: {
+  body: TUserModel;
+  headers: { Authorization: string };
+}): Promise<TUserModel> => {
+  const user: AxiosResponse<TUserModel> = await client.post(
+    "/admin/users",
+    input.body,
+    {
+      headers: input.headers,
+    }
+  );
+  return user.data;
+};
+
 const read = async (input: {
   headers: { Authorization: string };
 }): Promise<Array<TUserModel>> => {
@@ -35,6 +49,7 @@ const destroy = async (input: {
 };
 
 export default {
+  create,
   read,
   edit,
   destroy,

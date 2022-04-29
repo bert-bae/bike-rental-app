@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import {
-  useCreateUserMutation,
+  useAdminCreateUserMutation,
   useDeleteUserMutation,
   useEditUserMutation,
   useGetUsersQuery,
@@ -19,7 +19,7 @@ const useAdminUsersWidget = () => {
   const [userToEdit, setUserToEdit] = React.useState<TUserModel | void>();
   const { data: users } = useGetUsersQuery();
   const { mutate: createUser, isSuccess: createSuccess } =
-    useCreateUserMutation();
+    useAdminCreateUserMutation();
   const { mutate: editUser, isSuccess: editSuccess } = useEditUserMutation();
   const { mutate: deleteUser, isSuccess: deleteSuccess } =
     useDeleteUserMutation();
