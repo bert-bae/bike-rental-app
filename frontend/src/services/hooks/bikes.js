@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import bikesApi from "../api/bikes";
 import adminBikesApi from "../api/admin/bikes";
 import notify from "../../utils/notify";
+import { RestoreOutlined } from "@mui/icons-material";
 
 /* eslint-disable */
 
@@ -10,14 +11,19 @@ export const useGetReservableBikesQuery = (keys) => {
   const { jwt } = useSelector((state) => state.auth);
   const readBikes = async ({ queryKey }) => {
     const [_key, filters] = queryKey;
-    return bikesApi.read({ filters, headers: { Authorization: jwt } });
+    const result = await bikesApi.read({
+      filters,
+      headers: { Authorization: jwt },
+    });
+
+    return result;
   };
 
   return useQuery({
     queryFn: readBikes,
     queryKey: ["readBikes", keys],
     onError: () => {},
-    onSuccess: ({ data }) => {},
+    onSuccess: (data) => {},
     keepPreviousData: true,
   });
 };
@@ -35,7 +41,7 @@ export const useGetBikeQuery = (bikeId) => {
     queryFn: readBike,
     queryKey: ["readBike", bikeId],
     onError: () => {},
-    onSuccess: ({ data }) => {},
+    onSuccess: (data) => {},
   });
 };
 
@@ -51,7 +57,7 @@ export const useGetBikesQuery = (keys) => {
     queryFn: readBikes,
     queryKey: ["readBikes", keys],
     onError: () => {},
-    onSuccess: ({ data }) => {},
+    onSuccess: (data) => {},
     keepPreviousData: true,
   });
 };
@@ -73,7 +79,7 @@ export const useCreateBikeMutation = () => {
         message: "Bike could not be created",
       });
     },
-    onSuccess: ({ data }) => {
+    onSuccess: (data) => {
       notify("success", {
         title: "Success",
         message: "Bike created successfully",

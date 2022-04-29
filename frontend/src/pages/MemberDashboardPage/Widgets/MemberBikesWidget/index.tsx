@@ -25,7 +25,7 @@ const MemberBikesWidget: React.FC<any> = (props) => {
 
   return (
     <WidgetWrapper>
-      <Box padding={"10px"}>
+      <Box padding={"10px"} data-testid="memberBikesWidget">
         <Typography variant="h6">
           <b>Bikes</b>
         </Typography>

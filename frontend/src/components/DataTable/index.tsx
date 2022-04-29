@@ -101,6 +101,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 .map((row) => {
                   return (
                     <TableRow
+                      data-testid={`bike:${row.id}`}
                       hover
                       role="checkbox"
                       tabIndex={-1}

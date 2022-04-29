@@ -17,7 +17,7 @@ const MemberReservationsWidget: React.FC<any> = (props) => {
   } = useMemberReservationsWidget();
 
   return (
-    <WidgetWrapper>
+    <WidgetWrapper data-testid="memberReservationsWidget">
       <Box padding={"10px"}>
         <Typography variant="h6">
           <b>My Reservations</b>

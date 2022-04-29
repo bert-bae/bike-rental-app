@@ -116,6 +116,7 @@ const BikeTableFilters: React.FC<BikeTableFiltersProps> = ({
             });
           }}
           sx={{ m: 1 }}
+          data-testid="bikeSearchBtn"
         >
           Filter
         </Button>
