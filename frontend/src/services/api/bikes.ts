@@ -10,7 +10,7 @@ const read = async (input: {
 }): Promise<Array<TBikeModel>> => {
   const searchParams = queryStringConstructor(input.filters);
   const bikes: AxiosResponse<Array<TBikeModel>> = await client.get(
-    `/bikes?${searchParams.toString()}`,
+    `/bikes?${searchParams}`,
     {
       headers: input.headers,
     }

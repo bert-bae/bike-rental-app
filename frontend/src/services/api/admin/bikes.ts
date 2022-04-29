@@ -1,15 +1,22 @@
 import { AxiosResponse } from "axios";
+import { BikeFilters } from "../../../components/DataTable/EntityFilters/BikeTableFilters";
 import { TBikeModel } from "../../../types/entities.type";
 import client from "../baseClient";
+import { queryStringConstructor } from "../helpers/queryStrings";
 /* eslint-disable */
 
 const read = async (input: {
   body: TBikeModel;
+  filters: BikeFilters;
   headers: { Authorization: string };
 }): Promise<TBikeModel[]> => {
-  const bikes: AxiosResponse<TBikeModel[]> = await client.get("/admin/bikes", {
-    headers: input.headers,
-  });
+  const searchParams = queryStringConstructor(input.filters);
+  const bikes: AxiosResponse<TBikeModel[]> = await client.get(
+    `/admin/bikes?${searchParams}`,
+    {
+      headers: input.headers,
+    }
+  );
   return bikes.data;
 };
 
